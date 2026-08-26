@@ -169,7 +169,7 @@
       "fees": [
         {
           "academicYear": 2026,
-          "entranceExamFee": null,
+          "entranceExamFee": 17000,
           "admissionFee": { "saitamaResident": 211500, "outsideSaitama": 423000 },
           "annualTuition": 621000,
           "knownFourYearSchoolCostEstimate": {
@@ -207,9 +207,9 @@
       "dataQuality": {
         "status": "partial-but-publishable-for-research",
         "confidence": "high",
-        "missingFields": ["entranceExamFee", "homeCommuteTime"]
+        "missingFields": ["homeCommuteTime"]
       },
-      "sourceIds": ["spu-access", "spu-program", "spu-admission-results-2026", "spu-fees", "spu-national-exam", "spu-career-2024", "spu-career-destinations-2025", "spu-scholarships"]
+      "sourceIds": ["spu-access", "spu-program", "spu-admission-results-2026", "spu-admissions-2026", "spu-fees", "spu-national-exam", "spu-career-2024", "spu-career-destinations-2025", "spu-scholarships"]
     },
     {
       "id": "yokohama-city-university-nursing",
@@ -353,7 +353,7 @@
       "fees": [
         {
           "academicYear": 2026,
-          "entranceExamFee": null,
+          "entranceExamFee": 17000,
           "admissionFee": 282000,
           "annualTuition": 642960,
           "knownFourYearSchoolCostEstimate": {
@@ -386,9 +386,9 @@
       "dataQuality": {
         "status": "partial-but-publishable-for-research",
         "confidence": "high",
-        "missingFields": ["entranceExamFee", "textbookCost", "homeCommuteTime"]
+        "missingFields": ["textbookCost", "homeCommuteTime"]
       },
-      "sourceIds": ["chiba-access", "chiba-program", "chiba-admissions-2027", "chiba-admission-results", "chiba-fees", "chiba-national-exam", "chiba-career", "chiba-scholarships"]
+      "sourceIds": ["chiba-access", "chiba-program", "chiba-admissions-2027", "chiba-admission-results", "chiba-admission-fee", "chiba-fees", "chiba-national-exam", "chiba-career", "chiba-scholarships"]
     },
     {
       "id": "tokyo-junshin-university-nursing",
@@ -489,6 +489,7 @@
     { "id": "spu-program", "title": "埼玉県立大学 看護学科", "url": "https://www.spu.ac.jp/academics/nrs/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-admission-results-2026", "title": "埼玉県立大学 2026年度入学者選抜試験結果一覧表", "url": "https://www.spu.ac.jp/Portals/0/nyushi/2026/nyushi_kekka/2026gakubu_nyushi.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-fees", "title": "埼玉県立大学 入学金・授業料", "url": "https://www.spu.ac.jp/life/expense/tabid345.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-admissions-2026", "title": "埼玉県立大学 2026年度一般選抜学生募集要項", "url": "https://www.spu.ac.jp/Portals/0/nyushi/2026/2026%E5%8B%9F%E9%9B%86%E8%A6%81%E9%A0%85%EF%BC%88%E5%AD%A6%E9%83%A8%EF%BC%89/2026bosyuyoko_ippan.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-national-exam", "title": "埼玉県立大学 高い国家試験合格率", "url": "https://www.spu.ac.jp/life/tabid358.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-career-2024", "title": "埼玉県立大学 就職・進学状況（2024年度卒業生）", "url": "https://www.spu.ac.jp/life/tabid355.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-career-destinations-2025", "title": "埼玉県立大学 主な就職先", "url": "https://www.spu.ac.jp/life/tabid357.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
@@ -506,6 +507,7 @@
     { "id": "chiba-program", "title": "千葉大学看護学部 2027パンフレット", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index14.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admissions-2027", "title": "千葉大学看護学部 2027年度入学者選抜概要", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-admission-fee", "title": "千葉大学看護学部 よくいただくお問い合わせ（入学検定料）", "url": "https://www.n.chiba-u.jp/contact/faq.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-fees", "title": "千葉大学看護学部 学費等", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-national-exam", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-career", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },

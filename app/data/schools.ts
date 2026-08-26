@@ -18,7 +18,11 @@ type RawSchool = {
   };
   fees: Array<{
     academicYear: number;
+    entranceExamFee?: number | Record<string, number>;
     annualTuition?: number;
+    textbookAndUniformEstimateAnnual?: { min: number; max: number };
+    practicalFee?: number;
+    breakdown?: { practicalTraining?: number };
     knownFourYearSchoolCostEstimate?: Record<string, number | string | undefined>;
   }>;
   nationalExamResults: Array<{
@@ -66,6 +70,8 @@ export type School = {
   sourceCount: number;
   lastChecked: string;
   missingFields: string[];
+  entranceExamFeeLabel: string;
+  materialsCostLabel: string;
   careerSummary: string;
   scholarshipSummary: string;
   practiceSummary: string;
@@ -98,6 +104,21 @@ const formatCareerSummary = (career: RawSchool['career']) => {
   if (career.universityWide) parts.push(`大学全体：就職 ${career.universityWide.employed ?? '—'}人・進学 ${career.universityWide.advancing ?? '—'}人`);
   if (career.mainDestinations?.length) parts.push('主な就職先を掲載');
   return parts.join(' / ') || '主な就職先を掲載';
+};
+
+const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']) => {
+  if (fee === undefined) return '未収録';
+  if (typeof fee === 'number') return formatMan(fee);
+  return Object.entries(fee).map(([label, value]) => `${label} ${formatMan(value)}`).join('・');
+};
+
+const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
+  if (!fee) return '未収録';
+  if (fee.textbookAndUniformEstimateAnnual) {
+    return `教材・実習着 年${formatMan(fee.textbookAndUniformEstimateAnnual.min)}〜${formatMan(fee.textbookAndUniformEstimateAnnual.max)}`;
+  }
+  const practicalTraining = fee.breakdown?.practicalTraining ?? fee.practicalFee;
+  return practicalTraining === undefined ? '未収録' : `実習費 年${formatMan(practicalTraining)}`;
 };
 
 const buildSchool = (raw: RawSchool): School => {
@@ -137,6 +158,8 @@ const buildSchool = (raw: RawSchool): School => {
     sourceCount: raw.sourceIds.length,
     lastChecked: datasetMeta.collectedAt,
     missingFields: raw.dataQuality.missingFields,
+    entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
+    materialsCostLabel: formatMaterialsCost(fee),
     careerSummary: formatCareerSummary(raw.career),
     scholarshipSummary: raw.financialAid?.summary ?? '未収録',
     practiceSummary: raw.practice?.sites?.join('・') ?? raw.practice?.notes ?? '未収録',
