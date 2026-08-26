@@ -1,0 +1,523 @@
+{
+  "dataset": {
+    "name": "関東圏 看護系大学 初回収集データ",
+    "schemaVersion": "0.1.0",
+    "collectedAt": "2026-08-26",
+    "scope": {
+      "prefectures": ["東京都", "埼玉県", "千葉県", "神奈川県"],
+      "schoolType": "4年制大学の看護系学部・学科",
+      "schools": 5
+    },
+    "collectionMethod": "大学・学部の公式サイトおよび公式PDFを手動確認",
+    "evidencePolicy": "数値ごとに対象年度、確認日、出典URL、出典種別、確認状態を保持する",
+    "limitations": [
+      "生活費・自宅からの通学時間は出発地点が必要なため未収録",
+      "教科書、ユニフォーム、予防接種などは学校ごとに公開範囲が異なるため一部未収録",
+      "学費の4年間推計は、記載した費用だけを合算した試算であり、将来の改定を含まない",
+      "入試結果は選抜区分ごとの公式公表値を優先し、募集人員と入学定員を混同しない"
+    ]
+  },
+  "schools": [
+    {
+      "id": "tokyo-metropolitan-university-nursing",
+      "institution": {
+        "officialName": "東京都立大学",
+        "category": "公立",
+        "prefecture": "東京都",
+        "city": "荒川区",
+        "campus": "荒川キャンパス",
+        "address": "東京都荒川区東尾久7-2-10",
+        "officialUrl": "https://www.tmu.ac.jp/",
+        "programUrl": "https://www.hs.tmu.ac.jp/faculty/kango/info.html"
+      },
+      "program": {
+        "faculty": "健康福祉学部",
+        "department": "看護学科",
+        "durationYears": 4,
+        "admissionCapacity": 80,
+        "qualifications": [
+          "学士（看護学）",
+          "看護師国家試験受験資格",
+          "保健師国家試験受験資格"
+        ],
+        "qualificationNotes": "保健師課程は一定人数を超過した場合に選考審査。保健師免許取得後は養護教諭免許（二種）の申請が可能。"
+      },
+      "campusAccess": {
+        "mainCampusForYears2to4": "荒川キャンパス",
+        "firstYearCampus": "南大沢キャンパス",
+        "nearestStation": "熊野前駅",
+        "walkMinutes": 3,
+        "sourceIds": ["tmu-access"]
+      },
+      "admissions": [
+        {
+          "academicYear": 2027,
+          "admissionCapacity": 80,
+          "recruitment": {
+            "generalFirstTerm": 35,
+            "generalSecondTerm": 4,
+            "generalRecommendation": 31,
+            "designatedSchoolRecommendation": 7
+          },
+          "notes": "公式PDFの表には複数の特別選抜枠も掲載。初回データでは主要区分のみ構造化し、全区分の厳密な割当は次回確認。",
+          "sourceIds": ["tmu-admissions-2027"]
+        },
+        {
+          "academicYear": 2025,
+          "result": {
+            "departmentCapacity": 39,
+            "applicants": 204,
+            "applicantRatio": 5.23,
+            "admitted": 81
+          },
+          "notes": "大学公表の学部入試状況表に掲載された看護学科行。区分別の列定義は原表を併記して再確認する。",
+          "sourceIds": ["tmu-admission-results-2025"]
+        }
+      ],
+      "fees": [
+        {
+          "academicYear": 2026,
+          "entranceExamFee": 17000,
+          "admissionFee": {
+            "standard": 282000,
+            "tokyoResident": 141000,
+            "residentDefinition": "本人、配偶者または一親等の親族が入学日の1年前から東京都内に住所を有する者"
+          },
+          "annualTuition": 520800,
+          "knownFourYearSchoolCostEstimate": {
+            "standard": 2365200,
+            "tokyoResident": 2224200,
+            "calculation": "入学料＋授業料年額×4。その他費用・将来改定は除外。"
+          },
+          "otherMandatoryCosts": null,
+          "sourceIds": ["tmu-fees"]
+        }
+      ],
+      "nationalExamResults": [
+        { "examYear": 2026, "academicYear": 2025, "license": "看護師", "cohort": "新卒", "examinees": 80, "passers": 77, "passRate": 96.3 },
+        { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "新卒", "examinees": 78, "passers": 77, "passRate": 98.7 },
+        { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "新卒", "examinees": 81, "passers": 79, "passRate": 97.5 }
+      ],
+      "career": {
+        "latestAcademicYear": 2024,
+        "scope": "健康福祉学部全体の進路状況と、看護学科の主な進路",
+        "facultyWide": { "graduates": 192, "employed": 140, "advancing": 41, "careerDecisionRate": 99.3 },
+        "mainDestinations": ["東京都立病院機構", "国立国際医療研究センター", "東京大学医学部附属病院", "東京科学大学病院", "聖路加国際病院", "杏林大学医学部付属病院", "慶應義塾大学病院", "日本自治体・東京都・荒川区など"],
+        "notes": "看護学科ページでは主な就職先・進学先を掲載。就職率の数値は健康福祉学部全体の参考値で、看護学科単独の率とは分けて表示する。",
+        "sourceIds": ["tmu-career", "tmu-career-report-2024"]
+      },
+      "financialAid": {
+        "summary": "東京都立大学・東京都の授業料減免、奨学金制度を案内（制度ごとの対象・金額は個別確認）",
+        "sourceIds": ["tmu-fees"]
+      },
+      "dataQuality": {
+        "status": "partial-but-publishable-for-research",
+        "confidence": "high",
+        "missingFields": ["textbookCost", "clinicalPracticeCost", "homeCommuteTime"]
+      },
+      "sourceIds": ["tmu-access", "tmu-program", "tmu-admissions-2027", "tmu-admission-results-2025", "tmu-fees", "tmu-national-exam", "tmu-career", "tmu-career-report-2024"]
+    },
+    {
+      "id": "saitama-prefectural-university-nursing",
+      "institution": {
+        "officialName": "埼玉県立大学",
+        "category": "公立",
+        "prefecture": "埼玉県",
+        "city": "越谷市",
+        "campus": "越谷キャンパス",
+        "address": "埼玉県越谷市三野宮820番地",
+        "officialUrl": "https://www.spu.ac.jp/",
+        "programUrl": "https://www.spu.ac.jp/academics/nrs/"
+      },
+      "program": {
+        "faculty": "保健医療福祉学部",
+        "department": "看護学科",
+        "durationYears": 4,
+        "admissionCapacity": 130,
+        "qualifications": [
+          "看護師国家試験受験資格",
+          "保健師国家試験受験資格",
+          "助産師国家試験受験資格",
+          "養護教諭一種免許状"
+        ],
+        "qualificationNotes": "保健師は1学年38人以内、助産師は2026年度入学者から1学年15人以内、養護教諭は1学年10人程度。"
+      },
+      "campusAccess": {
+        "nearestStation": "せんげん台駅",
+        "busMinutes": 5,
+        "walkMinutes": 20,
+        "busFareOneWay": 200,
+        "sourceIds": ["spu-access"]
+      },
+      "admissions": [
+        {
+          "academicYear": 2026,
+          "admissionCapacity": 130,
+          "recruitment": { "generalFirstTerm": 65, "recommendation": 65, "socialAdult": "若干名" },
+          "result": {
+            "applicants": 328,
+            "examinees": 314,
+            "finalPassers": 140,
+            "enrollees": 135,
+            "applicantRatio": 2.5,
+            "examinationRatio": 2.4,
+            "finalPassRatio": 2.2
+          },
+          "sourceIds": ["spu-admission-results-2026"]
+        }
+      ],
+      "fees": [
+        {
+          "academicYear": 2026,
+          "entranceExamFee": null,
+          "admissionFee": { "saitamaResident": 211500, "outsideSaitama": 423000 },
+          "annualTuition": 621000,
+          "knownFourYearSchoolCostEstimate": {
+            "saitamaResident": 2695500,
+            "outsideSaitama": 2907000,
+            "calculation": "入学料＋授業料年額×4。教科書・実習着等は別。"
+          },
+          "textbookAndUniformEstimateAnnual": { "min": 20000, "max": 70000 },
+          "insuranceEstimateFourYear": 4000,
+          "practicalFee": 0,
+          "facilityFee": 0,
+          "sourceIds": ["spu-fees"]
+        }
+      ],
+      "nationalExamResults": [
+        { "examYear": 2026, "academicYear": 2025, "license": "看護師", "cohort": "大学公表受験者", "examinees": 125, "passers": 125, "passRate": 100.0 },
+        { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "大学公表受験者", "examinees": 135, "passers": 134, "passRate": 99.3 },
+        { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "大学公表受験者", "examinees": 127, "passers": 126, "passRate": 99.2 }
+      ],
+      "career": {
+        "latestAcademicYear": 2024,
+        "scope": "看護学科",
+        "graduates": 153,
+        "employed": 150,
+        "advancing": 3,
+        "careerDecisionRate": 100.0,
+        "prefectureEmploymentRate": 64.7,
+        "mainDestinations": ["埼玉県立がんセンター", "埼玉県立小児医療センター", "埼玉県立循環器・呼吸器病センター", "自治医科大学附属さいたま医療センター", "さいたま赤十字病院", "国立成育医療研究センター", "国立がん研究センター", "武蔵野赤十字病院", "聖路加国際病院"],
+        "sourceIds": ["spu-career-2024", "spu-career-destinations-2025"]
+      },
+      "financialAid": {
+        "summary": "日本学生支援機構、都道府県・市区町村等の奨学金、高等教育の修学支援新制度を案内",
+        "sourceIds": ["spu-scholarships"]
+      },
+      "dataQuality": {
+        "status": "partial-but-publishable-for-research",
+        "confidence": "high",
+        "missingFields": ["entranceExamFee", "homeCommuteTime"]
+      },
+      "sourceIds": ["spu-access", "spu-program", "spu-admission-results-2026", "spu-fees", "spu-national-exam", "spu-career-2024", "spu-career-destinations-2025", "spu-scholarships"]
+    },
+    {
+      "id": "yokohama-city-university-nursing",
+      "institution": {
+        "officialName": "横浜市立大学",
+        "category": "公立",
+        "prefecture": "神奈川県",
+        "city": "横浜市金沢区",
+        "campus": "福浦キャンパス",
+        "address": "横浜市金沢区福浦3-9",
+        "officialUrl": "https://www.yokohama-cu.ac.jp/",
+        "programUrl": "https://www.yokohama-cu.ac.jp/nur/nc/"
+      },
+      "program": {
+        "faculty": "医学部",
+        "department": "看護学科",
+        "durationYears": 4,
+        "admissionCapacity": 100,
+        "qualifications": [
+          "学士（看護学）",
+          "看護師国家試験受験資格",
+          "保健師国家試験受験資格"
+        ],
+        "qualificationNotes": "保健師課程は選択制で、希望者が定員を超える場合は選抜審査。"
+      },
+      "campusAccess": {
+        "nearestStation": "市大医学部駅",
+        "walkMinutes": 1,
+        "sourceIds": ["ycu-access"]
+      },
+      "admissions": [
+        {
+          "academicYear": 2027,
+          "recruitment": {
+            "generalFirstTermTotal": 55,
+            "generalA方式": 40,
+            "generalB方式": 15,
+            "specialPublicRecommendation": 5
+          },
+          "sourceIds": ["ycu-admissions-2027"]
+        },
+        {
+          "academicYear": 2026,
+          "result": {
+            "generalA方式Applicants": 147,
+            "generalA方式ApplicantRatio": 2.7
+          },
+          "notes": "一般選抜の速報値で、全選抜区分の最終集計ではない。",
+          "sourceIds": ["ycu-admission速報-2026"]
+        }
+      ],
+      "fees": [
+        {
+          "academicYear": 2026,
+          "entranceExamFee": 17000,
+          "admissionFee": { "yokohamaResident": 141000, "outsideYokohama": 282000 },
+          "annualTuition": 557400,
+          "experimentalPracticeFee": { "annualFromYear2": 20000 },
+          "knownFourYearSchoolCostEstimate": {
+            "yokohamaResident": 2478600,
+            "outsideYokohama": 2619600,
+            "calculation": "入学料＋授業料年額×4＋実験実習費2〜4年次。施設設備費等は別資料・年度差があるため未算入。"
+          },
+          "sourceIds": ["ycu-fees-2026"]
+        }
+      ],
+      "nationalExamResults": [
+        { "examYear": 2026, "academicYear": 2025, "license": "看護師", "cohort": "新卒", "examinees": 106, "passers": 106, "passRate": 100.0 },
+        { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "新卒", "examinees": 97, "passers": 97, "passRate": 100.0 },
+        { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "新卒", "examinees": 92, "passers": 92, "passRate": 100.0 }
+      ],
+      "career": {
+        "latestAcademicYear": 2026,
+        "scope": "看護学科の主な就職先",
+        "graduates": 106,
+        "mainDestinations": ["横浜市立大学附属病院", "横浜市立大学附属市民総合医療センター", "神奈川県立こども医療センター", "済生会横浜市南部病院", "聖マリアンナ医科大学横浜市西部病院", "国立国際医療研究センター", "日本赤十字社医療センター", "国立成育医療研究センター", "東京大学医学部附属病院"],
+        "notes": "公式の就職先一覧から主な就職先を構造化。就職率・進路決定率の学科単独数値は別途確認する。",
+        "sourceIds": ["ycu-career-2026"]
+      },
+      "financialAid": {
+        "summary": "横浜市立大学の奨学金に加え、附属2病院の看護職向け奨学金あり。2026年度は月額3万円・10名、卒業後に附属病院で2年以上勤務すると返還免除の条件。",
+        "sourceIds": ["ycu-scholarships", "ycu-hospital-scholarship-2026"]
+      },
+      "practice": {
+        "sites": ["横浜市立大学附属病院", "横浜市立大学附属市民総合医療センター", "横浜市内の保健・医療・福祉施設"],
+        "sourceIds": ["ycu-program"]
+      },
+      "dataQuality": {
+        "status": "partial-but-publishable-for-research",
+        "confidence": "high",
+        "missingFields": ["textbookCost", "employmentBreakdown", "homeCommuteTime"]
+      },
+      "sourceIds": ["ycu-access", "ycu-program", "ycu-admissions-2027", "ycu-admission速報-2026", "ycu-fees-2026", "ycu-national-exam", "ycu-career-2026", "ycu-scholarships", "ycu-hospital-scholarship-2026"]
+    },
+    {
+      "id": "chiba-university-nursing",
+      "institution": {
+        "officialName": "千葉大学",
+        "category": "国立",
+        "prefecture": "千葉県",
+        "city": "千葉市中央区",
+        "campus": "亥鼻キャンパス",
+        "address": "千葉市中央区亥鼻1-8-1",
+        "officialUrl": "https://www.chiba-u.jp/",
+        "programUrl": "https://www.n.chiba-u.jp/"
+      },
+      "program": {
+        "faculty": "看護学部",
+        "department": "看護学科",
+        "durationYears": 4,
+        "admissionCapacity": 80,
+        "creditsRequired": 124,
+        "qualifications": [
+          "学士（看護学）",
+          "看護師国家試験受験資格",
+          "保健師国家試験受験資格",
+          "助産師国家試験受験資格"
+        ],
+        "qualificationNotes": "看護師と保健師は同時取得可能。助産師関連科目は人数制限・履修条件があり、全員が受験資格を得られるわけではない。"
+      },
+      "campusAccess": {
+        "nearestStation": "千葉駅からバス「千葉大看護学部入口」",
+        "sourceIds": ["chiba-access"]
+      },
+      "admissions": [
+        {
+          "academicYear": 2027,
+          "recruitment": { "generalFirstTerm": 56, "recommendation": 24, "socialAdult": "若干名" },
+          "sourceIds": ["chiba-admissions-2027"]
+        },
+        {
+          "academicYear": 2026,
+          "result": {
+            "generalFirstTerm": { "recruitment": 49, "applicants": 167, "examinees": 150, "finalPassers": 61, "enrollees": 58, "applicantRatio": 3.4 },
+            "recommendation": { "recruitment": 24, "applicants": 62, "examinees": 62, "finalPassers": 21, "enrollees": 21 },
+            "socialAdult": { "recruitment": 7, "applicants": 6, "examinees": 6, "finalPassers": 2, "enrollees": 1 }
+          },
+          "sourceIds": ["chiba-admission-results"]
+        }
+      ],
+      "fees": [
+        {
+          "academicYear": 2026,
+          "entranceExamFee": null,
+          "admissionFee": 282000,
+          "annualTuition": 642960,
+          "knownFourYearSchoolCostEstimate": {
+            "value": 2853840,
+            "calculation": "入学料＋授業料年額×4。保険料、後援会費、教科書、PC等は別。"
+          },
+          "otherInitialCosts": "学生教育研究災害傷害保険料、後援会費、同窓会費等が別途必要。",
+          "sourceIds": ["chiba-fees"]
+        }
+      ],
+      "nationalExamResults": [
+        { "examYear": 2026, "academicYear": 2025, "license": "看護師", "cohort": "大学公表受験者", "examinees": 90, "passers": 90, "passRate": 100.0 },
+        { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "大学公表受験者", "examinees": 75, "passers": 74, "passRate": 98.7 },
+        { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "大学公表受験者", "examinees": 76, "passers": 75, "passRate": 98.7 }
+      ],
+      "career": {
+        "latestAcademicYear": 2025,
+        "scope": "看護学部看護学科",
+        "employed": 74,
+        "advancing": 15,
+        "other": 1,
+        "mainDestinations": ["千葉大学医学部附属病院", "東京大学医学部附属病院", "東京科学大学病院", "国立がん研究センター", "国立成育医療研究センター", "千葉県内の医療機関", "東京都・神奈川県などの医療機関"],
+        "notes": "大学公表の進路内訳は就職74人、進学等15人、その他1人。就職先は看護師・保健師・助産師等の区分を含む。",
+        "sourceIds": ["chiba-career"]
+      },
+      "financialAid": {
+        "summary": "日本学生支援機構、千葉大学の授業料免除・徴収猶予、高等教育の修学支援新制度を案内",
+        "sourceIds": ["chiba-scholarships"]
+      },
+      "dataQuality": {
+        "status": "partial-but-publishable-for-research",
+        "confidence": "high",
+        "missingFields": ["entranceExamFee", "textbookCost", "homeCommuteTime"]
+      },
+      "sourceIds": ["chiba-access", "chiba-program", "chiba-admissions-2027", "chiba-admission-results", "chiba-fees", "chiba-national-exam", "chiba-career", "chiba-scholarships"]
+    },
+    {
+      "id": "tokyo-junshin-university-nursing",
+      "institution": {
+        "officialName": "東京純心大学",
+        "category": "私立",
+        "prefecture": "東京都",
+        "city": "八王子市",
+        "campus": "八王子キャンパス",
+        "address": "東京都八王子市滝山町2-600",
+        "officialUrl": "https://www.t-junshin.ac.jp/univ/",
+        "programUrl": "https://www.t-junshin.ac.jp/univ/dep07.html"
+      },
+      "program": {
+        "faculty": "看護学部",
+        "department": "看護学科",
+        "durationYears": 4,
+        "admissionCapacity": 80,
+        "creditsRequired": 126,
+        "qualifications": [
+          "学士（看護学）",
+          "看護師国家試験受験資格",
+          "保健師国家試験受験資格（選択）"
+        ],
+        "midwifery": "別科助産専攻（1年・入学定員20名）"
+      },
+      "campusAccess": {
+        "address": "東京都八王子市滝山町2-600",
+        "nearestStation": null,
+        "sourceIds": ["junshin-program"]
+      },
+      "admissions": [
+        {
+          "academicYear": 2027,
+          "admissionCapacity": 80,
+          "recruitment": { "comprehensive": 20, "schoolRecommendation": null, "general": null, "commonTestUse": null },
+          "notes": "公式入試日程ページでは総合型20名を確認。その他の区分は募集要項の全表を次回構造化する。",
+          "sourceIds": ["junshin-admissions-2027"]
+        }
+      ],
+      "fees": [
+        {
+          "academicYear": 2026,
+          "entranceExamFee": { "standard": 35000, "commonTestUse": 15000, "multipleApplications": 40000 },
+          "admissionFee": 200000,
+          "annualTuition": 1630000,
+          "breakdown": { "tuition": 1100000, "educationEnhancement": 290000, "practicalTraining": 240000 },
+          "otherMandatoryCosts": { "studentAssociationAnnual": 10000, "parentsAssociationFourYear": 100000, "systemManagementFeeFirstYear": 640 },
+          "knownFourYearSchoolCostEstimate": {
+            "value": 6860640,
+            "calculation": "入学金＋授業料等年額×4＋学生会費4年＋後援会費＋学費システム管理費。教科書等は除外。"
+          },
+          "sourceIds": ["junshin-fees"]
+        }
+      ],
+      "nationalExamResults": [
+        { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "新卒", "examinees": 59, "passers": 53, "passRate": 89.8 },
+        { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "新卒", "examinees": 65, "passers": 56, "passRate": 86.2 },
+        { "examYear": 2023, "academicYear": 2022, "license": "看護師", "cohort": "新卒", "examinees": 67, "passers": 54, "passRate": 80.5 }
+      ],
+      "career": {
+        "latestAcademicYear": 2025,
+        "scope": "大学全体の進路状況と、看護学科の卒業者数・主な就職先",
+        "careerDecisionRate": 100.0,
+        "universityWide": { "graduates": 76, "employed": 64, "advancing": 3 },
+        "nursingDepartmentGraduates": 62,
+        "mainDestinations": ["聖マリアンナ医科大学病院", "聖マリアンナ医科大学横浜市西部病院", "聖マリアンナ医科大学川崎市立多摩病院", "杏林大学医学部付属病院", "東京医科大学八王子医療センター", "東京女子医科大学病院", "東京都立小児総合医療センター", "国立成育医療研究センター", "国立国際医療研究センター"],
+        "notes": "就職者64人は大学全体の数値。看護学科単独の就職者数とは分けて表示する。",
+        "sourceIds": ["junshin-career", "junshin-career-2026", "junshin-program"]
+      },
+      "financialAid": {
+        "summary": "大学独自の給付型奨学金に加え、聖マリアンナ医科大学病院・八王子山王病院などの貸与/返還免除型制度、日本学生支援機構等を案内",
+        "programs": ["江角記念奨学金（給付）", "東京純心大学後援会奨学金（20万円給付）", "聖マリアンナ医科大学病院等の勤務条件付き奨学金", "日本学生支援機構", "高等教育の修学支援新制度"],
+        "sourceIds": ["junshin-scholarships"]
+      },
+      "practice": {
+        "notes": "大学案内では大学附属病院等を活用した臨地実習を重視する方針を確認。個別の実習先一覧は次回確認。",
+        "sourceIds": ["junshin-admission"]
+      },
+      "dataQuality": {
+        "status": "partial-but-publishable-for-research",
+        "confidence": "high",
+        "missingFields": ["2026 national exam result", "detailed admission allocation", "textbookCost", "homeCommuteTime"]
+      },
+      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission"]
+    }
+  ],
+  "sources": [
+    { "id": "tmu-access", "title": "東京都立大学 健康福祉学部アクセス", "url": "https://www.hs.tmu.ac.jp/access.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-program", "title": "東京都立大学 看護学科概要", "url": "https://www.hs.tmu.ac.jp/faculty/kango/info.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-admissions-2027", "title": "東京都立大学 2027年度入試募集人員", "url": "https://www.tmu.ac.jp/entrance/faculty/34824.html?d=assets/files/download/entrance/guide/2026/2027bosyuujinin.pdf", "sourceType": "official-pdf", "publishedOrUpdated": "2026-07-28", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "tmu-admission-results-2025", "title": "東京都立大学 2025年度入試状況（学部）", "url": "https://www.tmu.ac.jp/university/kyouikujouhoutop/legal-matters/sinrotop/22536.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "tmu-fees", "title": "東京都立大学 学費・減免制度・奨学金制度等", "url": "https://www.tmu.ac.jp/campuslife_career/expenses.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-national-exam", "title": "東京都立大学 国家資格試験合格状況", "url": "https://www.hs.tmu.ac.jp/campus/passing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-career", "title": "東京都立大学 看護学科 就職・進学先", "url": "https://www.tmu.ac.jp/academics/hs/nursing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-career-report-2024", "title": "東京都立大学 2024年度就職・進学状況", "url": "https://www.houjin-tmu.ac.jp/wp/wp-content/uploads/2025/04/1e1d1566-3575-45c1-a345-85910c612e05.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-access", "title": "埼玉県立大学 交通アクセス", "url": "https://www.spu.ac.jp/access/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-program", "title": "埼玉県立大学 看護学科", "url": "https://www.spu.ac.jp/academics/nrs/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-admission-results-2026", "title": "埼玉県立大学 2026年度入学者選抜試験結果一覧表", "url": "https://www.spu.ac.jp/Portals/0/nyushi/2026/nyushi_kekka/2026gakubu_nyushi.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-fees", "title": "埼玉県立大学 入学金・授業料", "url": "https://www.spu.ac.jp/life/expense/tabid345.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-national-exam", "title": "埼玉県立大学 高い国家試験合格率", "url": "https://www.spu.ac.jp/life/tabid358.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-career-2024", "title": "埼玉県立大学 就職・進学状況（2024年度卒業生）", "url": "https://www.spu.ac.jp/life/tabid355.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-career-destinations-2025", "title": "埼玉県立大学 主な就職先", "url": "https://www.spu.ac.jp/life/tabid357.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "spu-scholarships", "title": "埼玉県立大学 奨学金", "url": "https://www.spu.ac.jp/life/expense/tabid346.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-access", "title": "横浜市立大学 福浦キャンパス・附属病院", "url": "https://www.yokohama-cu.ac.jp/access/fukuura_campusmap.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-program", "title": "横浜市立大学 医学部看護学科", "url": "https://www.yokohama-cu.ac.jp/nur/nc/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-admissions-2027", "title": "横浜市立大学 医学部看護学科 前期日程", "url": "https://www.yokohama-cu.ac.jp/admissions/admissions/general_selection/Nursing_Course.html", "sourceType": "university-official", "publishedOrUpdated": "2026-06-10", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-admission速報-2026", "title": "横浜市立大学 2026年度入学試験志願者数速報", "url": "https://www.yokohama-cu.ac.jp/admissions/news/2025/2026_report_ippan.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-fees-2026", "title": "横浜市立大学 令和8年度授業料・実験実習費", "url": "https://www.yokohama-cu.ac.jp/students/tuition.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-national-exam", "title": "横浜市立大学 国家試験合格状況", "url": "https://www.yokohama-cu.ac.jp/nur/nc/license.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-career-2026", "title": "横浜市立大学 2026年3月卒業 看護学科就職先", "url": "https://www.yokohama-cu.ac.jp/career_dev/career/dr3e64000001vsw6-att/2026_nur_course.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-scholarships", "title": "横浜市立大学 奨学金", "url": "https://www.yokohama-cu.ac.jp/students/scholarship/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-hospital-scholarship-2026", "title": "横浜市立大学附属病院 看護職員修学資金", "url": "https://www.yokohama-cu.ac.jp/nur_rec/recruit/r08nur_suisen.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-access", "title": "千葉大学看護学部 交通アクセス", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index24.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-program", "title": "千葉大学看護学部 2027パンフレット", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index14.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-admissions-2027", "title": "千葉大学看護学部 2027年度入学者選抜概要", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-fees", "title": "千葉大学看護学部 学費等", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-national-exam", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-career", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-scholarships", "title": "千葉大学 2027大学案内 奨学金・授業料支援", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index21.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-program", "title": "東京純心大学 看護学部看護学科", "url": "https://www.t-junshin.ac.jp/univ/dep07.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-capacity", "title": "東京純心大学 収容定員及び在籍数", "url": "https://www.t-junshin.ac.jp/univ/col/summary__trashed/fixed_number.html", "sourceType": "university-official", "publishedOrUpdated": "2026-05-01", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "junshin-fees", "title": "東京純心大学 検定料・授業料", "url": "https://www.t-junshin.ac.jp/univ/pro/price.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-national-exam", "title": "東京純心大学 自己点検評価書・看護師国家試験データ", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R6zikotenkenhyokasyo.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-career-2026", "title": "東京純心大学 2027年度大学案内 看護学科就職率", "url": "https://www.t-junshin.ac.jp/univ/lp2026/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-scholarships", "title": "東京純心大学 奨学金・学生支援", "url": "https://www.t-junshin.ac.jp/univ/col/h30_012.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-admission", "title": "東京純心大学 看護学部の学び・入試", "url": "https://www.t-junshin.ac.jp/univ/admission.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" }
+  ]
+}
