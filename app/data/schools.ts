@@ -21,8 +21,10 @@ type RawSchool = {
     entranceExamFee?: number | Record<string, number>;
     annualTuition?: number;
     textbookAndUniformEstimateAnnual?: { min: number; max: number };
+    insuranceEstimateFourYear?: number;
     practicalFee?: number;
     breakdown?: { practicalTraining?: number };
+    experimentalPracticeFee?: { annualFromYear2?: number };
     knownFourYearSchoolCostEstimate?: Record<string, number | string | undefined>;
   }>;
   nationalExamResults: Array<{
@@ -115,10 +117,13 @@ const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']
 const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
   if (!fee) return '未収録';
   if (fee.textbookAndUniformEstimateAnnual) {
-    return `教材・実習着 年${formatMan(fee.textbookAndUniformEstimateAnnual.min)}〜${formatMan(fee.textbookAndUniformEstimateAnnual.max)}`;
+    const insurance = fee.insuranceEstimateFourYear ? `・保険4年${formatMan(fee.insuranceEstimateFourYear)}` : '';
+    return `教材・実習着 年${formatMan(fee.textbookAndUniformEstimateAnnual.min)}〜${formatMan(fee.textbookAndUniformEstimateAnnual.max)}${insurance}`;
   }
-  const practicalTraining = fee.breakdown?.practicalTraining ?? fee.practicalFee;
-  return practicalTraining === undefined ? '未収録' : `実習費 年${formatMan(practicalTraining)}`;
+  const practicalTraining = fee.breakdown?.practicalTraining ?? fee.practicalFee ?? fee.experimentalPracticeFee?.annualFromYear2;
+  if (practicalTraining === undefined) return '未収録';
+  const fromYear = fee.experimentalPracticeFee?.annualFromYear2 ? '（2年次〜）' : '';
+  return `実習費 年${formatMan(practicalTraining)}${fromYear}`;
 };
 
 const buildSchool = (raw: RawSchool): School => {

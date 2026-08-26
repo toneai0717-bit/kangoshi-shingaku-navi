@@ -110,12 +110,16 @@
         "summary": "東京都立大学・東京都の授業料減免、奨学金制度を案内（制度ごとの対象・金額は個別確認）",
         "sourceIds": ["tmu-fees"]
       },
+      "practice": {
+        "notes": "2年次以降の荒川キャンパスで専門科目・医療機関での実習を行い、4年次に総合臨地看護学実習を実施。個別施設名と実習関連費は次回確認。",
+        "sourceIds": ["tmu-program", "tmu-guide-2026"]
+      },
       "dataQuality": {
         "status": "partial-but-publishable-for-research",
         "confidence": "high",
         "missingFields": ["textbookCost", "clinicalPracticeCost", "homeCommuteTime"]
       },
-      "sourceIds": ["tmu-access", "tmu-program", "tmu-admissions-2027", "tmu-admission-results-2025", "tmu-fees", "tmu-national-exam", "tmu-career", "tmu-career-report-2024"]
+      "sourceIds": ["tmu-access", "tmu-program", "tmu-admissions-2027", "tmu-admission-results-2025", "tmu-fees", "tmu-national-exam", "tmu-career", "tmu-career-report-2024", "tmu-guide-2026"]
     },
     {
       "id": "saitama-prefectural-university-nursing",
@@ -485,6 +489,7 @@
     { "id": "tmu-national-exam", "title": "東京都立大学 国家資格試験合格状況", "url": "https://www.hs.tmu.ac.jp/campus/passing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-career", "title": "東京都立大学 看護学科 就職・進学先", "url": "https://www.tmu.ac.jp/academics/hs/nursing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-career-report-2024", "title": "東京都立大学 2024年度就職・進学状況", "url": "https://www.houjin-tmu.ac.jp/wp/wp-content/uploads/2025/04/1e1d1566-3575-45c1-a345-85910c612e05.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-guide-2026", "title": "東京都立大学 大学案内2026 看護学科", "url": "https://www.tmu.ac.jp/extra/download.html?d=assets/files/download/guidebook2026/TMUpamphlet2026.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-access", "title": "埼玉県立大学 交通アクセス", "url": "https://www.spu.ac.jp/access/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-program", "title": "埼玉県立大学 看護学科", "url": "https://www.spu.ac.jp/academics/nrs/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "spu-admission-results-2026", "title": "埼玉県立大学 2026年度入学者選抜試験結果一覧表", "url": "https://www.spu.ac.jp/Portals/0/nyushi/2026/nyushi_kekka/2026gakubu_nyushi.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
