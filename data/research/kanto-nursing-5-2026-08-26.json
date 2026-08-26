@@ -289,6 +289,10 @@
         "latestAcademicYear": 2026,
         "scope": "看護学科の主な就職先",
         "graduates": 106,
+        "destinationsWithPublishedCounts": [
+          { "destination": "横浜市立大学附属病院", "count": 34 },
+          { "destination": "横浜市立大学附属市民総合医療センター", "count": 36 }
+        ],
         "mainDestinations": ["横浜市立大学附属病院", "横浜市立大学附属市民総合医療センター", "神奈川県立こども医療センター", "済生会横浜市南部病院", "聖マリアンナ医科大学横浜市西部病院", "国立国際医療研究センター", "日本赤十字社医療センター", "国立成育医療研究センター", "東京大学医学部附属病院"],
         "notes": "公式の就職先一覧から主な就職先を構造化。就職率・進路決定率の学科単独数値は別途確認する。",
         "sourceIds": ["ycu-career-2026"]
@@ -428,8 +432,8 @@
         {
           "academicYear": 2027,
           "admissionCapacity": 80,
-          "recruitment": { "comprehensive": 20, "schoolRecommendation": null, "general": null, "commonTestUse": null },
-          "notes": "公式入試日程ページでは総合型20名を確認。その他の区分は募集要項の全表を次回構造化する。",
+          "recruitment": { "comprehensive": 20, "schoolRecommendation": 40, "general": 20, "commonTestUse": "若干名", "socialAdult": "若干名", "overseasReturnee": "若干名" },
+          "notes": "公式入試日程ページの2027年度看護学部欄を構造化。募集人員80名に対し、若干名区分の位置づけ・重複関係は募集要項で最終確認する。",
           "sourceIds": ["junshin-admissions-2027"]
         }
       ],
@@ -475,7 +479,7 @@
       "dataQuality": {
         "status": "partial-but-publishable-for-research",
         "confidence": "high",
-        "missingFields": ["2026 national exam result", "detailed admission allocation", "textbookCost", "homeCommuteTime"]
+        "missingFields": ["2026 national exam result", "textbookCost", "homeCommuteTime"]
       },
       "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission"]
     }
@@ -519,7 +523,7 @@
     { "id": "chiba-scholarships", "title": "千葉大学 2027大学案内 奨学金・授業料支援", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index21.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-program", "title": "東京純心大学 看護学部看護学科", "url": "https://www.t-junshin.ac.jp/univ/dep07.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-capacity", "title": "東京純心大学 収容定員及び在籍数", "url": "https://www.t-junshin.ac.jp/univ/col/summary__trashed/fixed_number.html", "sourceType": "university-official", "publishedOrUpdated": "2026-05-01", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-fees", "title": "東京純心大学 検定料・授業料", "url": "https://www.t-junshin.ac.jp/univ/pro/price.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-national-exam", "title": "東京純心大学 自己点検評価書・看護師国家試験データ", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R6zikotenkenhyokasyo.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
