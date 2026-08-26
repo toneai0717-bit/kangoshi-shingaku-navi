@@ -56,6 +56,8 @@ type RawSchool = {
   sourceIds: string[];
 };
 
+type SourceLink = { id: string; title: string; url: string };
+
 export type School = {
   id: string;
   name: string;
@@ -75,6 +77,7 @@ export type School = {
   certificates: string;
   confidence: string;
   sourceCount: number;
+  sources: SourceLink[];
   lastChecked: string;
   missingFields: string[];
   entranceExamFeeLabel: string;
@@ -91,6 +94,7 @@ export const datasetMeta = {
 };
 
 const rawSchools = researchData.schools as unknown as RawSchool[];
+const sourceCatalog = researchData.sources as SourceLink[];
 
 const formatMan = (yen: number) => {
   const man = yen / 10000;
@@ -187,6 +191,7 @@ const buildSchool = (raw: RawSchool): School => {
     certificates: qualifications.join('・'),
     confidence: raw.dataQuality.confidence === 'high' ? 'A 公式情報（初回確認）' : raw.dataQuality.confidence,
     sourceCount: raw.sourceIds.length,
+    sources: raw.sourceIds.map((sourceId) => sourceCatalog.find((source) => source.id === sourceId)).filter((source): source is SourceLink => Boolean(source)),
     lastChecked: datasetMeta.collectedAt,
     missingFields: raw.dataQuality.missingFields,
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
