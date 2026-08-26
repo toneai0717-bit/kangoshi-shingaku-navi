@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { datasetMeta, formatSchoolCost, schools, type School } from './data/schools';
+import { datasetMeta, formatSchoolCost, schools as sourceSchools, type School } from './data/schools';
 
 type LivingMode = 'home' | 'away';
 
@@ -12,13 +12,20 @@ export default function Home() {
   const [area, setArea] = useState('関東全域');
   const [tuitionLimit, setTuitionLimit] = useState('650万円以内');
   const [commuteLimit, setCommuteLimit] = useState('60分以内');
-  const [selectedIds, setSelectedIds] = useState<string[]>(schools.slice(0, 2).map((school) => school.id));
+  const [commuteTimes, setCommuteTimes] = useState<Record<string, string>>({});
+  const [selectedIds, setSelectedIds] = useState<string[]>(sourceSchools.slice(0, 2).map((school) => school.id));
   const [searching, setSearching] = useState(false);
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizSent, setQuizSent] = useState(false);
   const [livingMode, setLivingMode] = useState<LivingMode>('home');
-  const [annualTuition, setAnnualTuition] = useState(Math.round(schools[0]?.annualTuition ?? 60));
+  const [annualTuition, setAnnualTuition] = useState(Math.round(sourceSchools[0]?.annualTuition ?? 60));
   const [annualExtra, setAnnualExtra] = useState(10);
+
+  const schools = useMemo(() => sourceSchools.map((school) => {
+    const entered = commuteTimes[school.id]?.trim();
+    const minutes = entered ? Number(entered) : NaN;
+    return { ...school, commute: Number.isFinite(minutes) && minutes > 0 ? minutes : school.commute };
+  }), [commuteTimes]);
 
   const filteredSchools = useMemo(() => schools.filter((school) => {
     const inArea = area === '関東全域' || school.prefecture === area;
@@ -27,7 +34,7 @@ export default function Home() {
     const inBudget = school.tuition <= maxTuition;
     const inCommute = school.commute === null || school.commute <= maxCommute;
     return inArea && inBudget && inCommute;
-  }), [area, commuteLimit, tuitionLimit]);
+  }), [area, commuteLimit, tuitionLimit, schools]);
 
   const selectedSchools = selectedIds.map((id) => schools.find((school) => school.id === id)).filter((school): school is School => Boolean(school));
   const livingCost = livingMode === 'away' ? 400 : 100;
@@ -85,6 +92,7 @@ export default function Home() {
         <section id="data-details"><div className="wrap"><div className="section-head"><div className="eyebrow">費用の内訳</div><h2>初期費用と教材・実習費も確認</h2><p>4年間の既知費用とは別に、出願時の検定料や、学校が公開している教材・実習関連費を表示しています。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>費用項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>入試検定料</td>{schools.map((school) => <td key={school.id}>{school.entranceExamFeeLabel}</td>)}</tr><tr><td>教材・実習費</td>{schools.map((school) => <td key={school.id}>{school.materialsCostLabel}</td>)}</tr></tbody></table></div></div></section>
         <section id="admissions-details"><div className="wrap"><div className="section-head"><div className="eyebrow">入試情報</div><h2>募集枠の違いも確認</h2><p>2027年度の公式募集人員を、学校ごとの選抜区分で整理しています。若干名は公式表記のままです。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>2027年度募集枠</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>選抜区分別</td>{schools.map((school) => <td key={school.id}>{school.admissionSummary}</td>)}</tr></tbody></table></div></div></section>
         <section id="sources"><div className="wrap"><div className="section-head"><div className="eyebrow">出典</div><h2>数字の根拠を確認する</h2><p>学校ごとに確認した公式ページ・公式PDFを一覧で確認できます。</p></div><div className="source-grid">{schools.map((school) => <details key={school.id}><summary>{school.name}（{school.sourceCount}件）</summary><ul>{school.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title} ↗</a></li>)}</ul></details>)}</div></div></section>
+        <section id="commute"><div className="wrap"><div className="section-head"><div className="eyebrow">通学時間</div><h2>自宅からの通学時間を入力</h2><p>自宅の最寄り駅などから学校までの所要時間を入力すると、検索結果と比較表に反映されます。入力値はこのブラウザ内だけで利用します。</p></div><div className="searchbox"><div className="filters commute-inputs">{sourceSchools.map((school) => <div className="field" key={school.id}><label htmlFor={`commute-${school.id}`}>{school.name}</label><input id={`commute-${school.id}`} type="number" min="1" max="300" inputMode="numeric" placeholder="例：45" value={commuteTimes[school.id] ?? ''} onChange={(event) => setCommuteTimes((current) => ({ ...current, [school.id]: event.target.value }))} /><small>分</small></div>)}</div><p className="info simulator-note">未入力の学校は「未収録」として扱い、通学時間の条件検索から除外しません。</p></div></div></section>
       </main>
 
       <footer><div className="wrap"><div className="footer-grid"><div><div className="brand footer-brand"><span className="logo">看</span>看護進学ナビ</div><p>数字と根拠から、納得できる進路選びを支える比較サービス。</p></div><div><b>このサイトについて</b><p>{datasetMeta.schoolCount}校の公式情報を初回接続しています。未収録項目は確定情報のように表示せず、順次追加します。</p></div></div><div className="disclaimer">© 2026 看護進学ナビ。初回データ最終確認：{datasetMeta.collectedAt.replaceAll('-', '.')}。</div></div></footer>
