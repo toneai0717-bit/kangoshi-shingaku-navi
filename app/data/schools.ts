@@ -1,4 +1,5 @@
 import researchData from '@/data/research/kanto-nursing-5-2026-08-26.json';
+import { housingBySchoolId, type HousingEstimate } from './housing';
 
 type RawSchool = {
   id: string;
@@ -72,6 +73,7 @@ export type School = {
   costLabel: string;
   livingTotal: number | null;
   commute: number | null;
+  housing?: HousingEstimate;
   passRate: number;
   latestPassRate: number;
   latestPassCount: number;
@@ -215,6 +217,7 @@ const buildSchool = (raw: RawSchool): School => {
     costLabel: costMin === costMax ? formatMan(costMax) : `${formatMan(costMin)}〜${formatMan(costMax)}`,
     livingTotal: null,
     commute: null,
+    housing: housingBySchoolId.get(raw.id),
     passRate: Math.round(passRate * 10) / 10,
     latestPassRate: latestResult?.passRate ?? 0,
     latestPassCount: latestResult?.passers ?? 0,

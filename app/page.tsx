@@ -1,6 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { calculateFourYearCost } from './data/costs';
+import { housingAssumptions } from './data/housing';
 import { datasetMeta, formatSchoolCost, schools as sourceSchools, type School } from './data/schools';
 
 type LivingMode = 'home' | 'away';
@@ -18,8 +20,9 @@ export default function Home() {
   const [quizOpen, setQuizOpen] = useState(false);
   const [quizSent, setQuizSent] = useState(false);
   const [livingMode, setLivingMode] = useState<LivingMode>('home');
-  const [annualTuition, setAnnualTuition] = useState(Math.round(sourceSchools[0]?.annualTuition ?? 60));
+  const [selectedCostSchoolId, setSelectedCostSchoolId] = useState(sourceSchools[0]?.id ?? '');
   const [annualExtra, setAnnualExtra] = useState(10);
+  const [monthlyLivingCostMan, setMonthlyLivingCostMan] = useState(8);
 
   const schools = useMemo(() => sourceSchools.map((school) => {
     const entered = commuteTimes[school.id]?.trim();
@@ -37,9 +40,17 @@ export default function Home() {
   }), [area, commuteLimit, tuitionLimit, schools]);
 
   const selectedSchools = selectedIds.map((id) => schools.find((school) => school.id === id)).filter((school): school is School => Boolean(school));
-  const livingCost = livingMode === 'away' ? 400 : 100;
-  const totalCost = annualTuition * 4 + annualExtra * 4 + livingCost;
-  const costBar = Math.min(100, Math.max(18, Math.round(totalCost / 10)));
+  const selectedCostSchool = sourceSchools.find((school) => school.id === selectedCostSchoolId) ?? sourceSchools[0];
+  const fourYearCost = calculateFourYearCost({
+    schoolCostYen: Math.round((selectedCostSchool?.tuition ?? 0) * 10000),
+    annualExtraYen: annualExtra * 10000,
+    livingMode,
+    housing: selectedCostSchool?.housing,
+    managementFeeMonthlyYen: housingAssumptions.managementFeeMonthlyYen,
+    initialCostMonths: housingAssumptions.initialCostMonths,
+    monthlyLivingCostYen: livingMode === 'away' ? monthlyLivingCostMan * 10000 : 20000,
+  });
+  const costBar = Math.min(100, Math.max(18, Math.round(fourYearCost.totalCostYen / 100000)));
 
   const toggleSchool = (id: string) => {
     setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : current.length >= 3 ? current : [...current, id]);
@@ -86,7 +97,7 @@ export default function Home() {
 
         <section className="dark" id="compare"><div className="wrap"><div className="section-head"><div className="eyebrow">学校比較</div><h2>学校ごとの違いを、同じ基準で比較</h2><p>数値だけでなく、対象年度や集計条件もあわせて確認できます。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>比較項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>4年間の既知費用<br /><span className="info">居住地で変動する場合あり</span></td>{schools.map((school) => <td className="good" key={school.id}>{formatSchoolCost(school)}</td>)}</tr><tr><td>生活費込み総額</td>{schools.map((school) => <td key={school.id}>{formatOptional(school.livingTotal, '万円')}</td>)}</tr><tr><td>看護師国試 3年平均<br /><span className="info">大学公表値・対象区分は学校ごとに確認</span></td>{schools.map((school) => <td className="good" key={school.id}>{school.passRate}%<br /><span className="info">最新 {school.latestPassRate}%・合格者 {school.latestPassCount}/{school.latestExamineeCount}人（{school.examBasis}）</span></td>)}</tr><tr><td>通学時間</td>{schools.map((school) => <td key={school.id}>{formatOptional(school.commute, '分')}</td>)}</tr><tr><td>取得可能資格</td>{schools.map((school) => <td key={school.id}>{school.certificates}</td>)}</tr><tr><td>卒業後の進路</td>{schools.map((school) => <td key={school.id}>{school.careerSummary}</td>)}</tr><tr><td>奨学金・支援</td>{schools.map((school) => <td key={school.id}>{school.scholarshipSummary}</td>)}</tr><tr><td>主な実習先・実習メモ</td>{schools.map((school) => <td key={school.id}>{school.practiceSummary}</td>)}</tr><tr><td>情報の信頼度</td>{schools.map((school) => <td className={school.confidence.startsWith('A') ? 'good' : ''} key={school.id}>{school.confidence}<br /><span className="info">未収録 {school.missingFields.length}項目・出典{school.sourceCount}件</span></td>)}</tr></tbody></table></div></div></section>
 
-        <section id="cost"><div className="wrap"><div className="section-head"><div className="eyebrow">費用シミュレーション</div><h2>卒業までに必要な費用を試算</h2><p>学費だけではなく、通学・住居・奨学金を含めた、卒業までのお金を試算します。</p></div><div className="sim-grid"><div className="panel"><h3>条件を調整</h3><div className="range-line"><label htmlFor="annual-tuition"><span>年間学費</span><b>{annualTuition}万円</b></label><input id="annual-tuition" type="range" min="50" max="220" value={annualTuition} onChange={(event) => setAnnualTuition(Number(event.target.value))} /></div><div className="range-line"><label htmlFor="annual-extra"><span>年間の教材・実習費</span><b>{annualExtra}万円</b></label><input id="annual-extra" type="range" min="0" max="60" value={annualExtra} onChange={(event) => setAnnualExtra(Number(event.target.value))} /></div><label className="living-label">生活スタイル</label><div className="toggle"><button className={livingMode === 'home' ? 'active' : ''} onClick={() => setLivingMode('home')}>自宅から通う</button><button className={livingMode === 'away' ? 'active' : ''} onClick={() => setLivingMode('away')}>一人暮らし</button></div></div><div className="panel"><small className="muted-label">4年間の推定総額</small><div className="big-number">{formatYen(totalCost)}</div><div className="bar"><span style={{ width: `${costBar}%` }} /></div><div className="breakdown"><div><small>学費</small><b>{formatYen(annualTuition * 4)}</b></div><div><small>教材・実習</small><b>{formatYen(annualExtra * 4)}</b></div><div><small>通学・生活</small><b>{formatYen(livingCost)}</b></div></div><p className="info simulator-note">これは概算です。学校の公式情報、年度別納付金、住居条件を確認してください。</p></div></div></div></section>
+        <section id="cost"><div className="wrap"><div className="section-head"><div className="eyebrow">費用シミュレーション</div><h2>卒業までに必要な費用を試算</h2><p>学校ごとの既知費用に、住居費・生活費の仮設定を加えて4年間の総額を試算します。</p></div><div className="sim-grid"><div className="panel"><h3>条件を調整</h3><div className="field"><label htmlFor="cost-school">学校</label><select id="cost-school" value={selectedCostSchoolId} onChange={(event) => setSelectedCostSchoolId(event.target.value)}>{sourceSchools.map((school) => <option value={school.id} key={school.id}>{school.name}</option>)}</select></div><div className="range-line"><label htmlFor="annual-extra"><span>年間の教材・実習費</span><b>{annualExtra}万円</b></label><input id="annual-extra" type="range" min="0" max="60" value={annualExtra} onChange={(event) => setAnnualExtra(Number(event.target.value))} /></div><label className="living-label">生活スタイル</label><div className="toggle"><button className={livingMode === 'home' ? 'active' : ''} onClick={() => setLivingMode('home')}>自宅から通う</button><button className={livingMode === 'away' ? 'active' : ''} onClick={() => setLivingMode('away')}>一人暮らし</button></div>{livingMode === 'away' && <div className="range-line"><label htmlFor="monthly-living"><span>月の生活費（食費・光熱費等）</span><b>{monthlyLivingCostMan}万円</b></label><input id="monthly-living" type="range" min="5" max="15" value={monthlyLivingCostMan} onChange={(event) => setMonthlyLivingCostMan(Number(event.target.value))} /></div>}<p className="info simulator-note">学校費用は表示中の「4年間既知費用」の上限側を使用。教材・実習費は仮設定です。</p></div><div className="panel"><small className="muted-label">{selectedCostSchool?.name}・4年間の推定総額</small><div className="big-number">{formatYen(fourYearCost.totalCostYen / 10000)}</div><div className="bar"><span style={{ width: `${costBar}%` }} /></div><div className="breakdown"><div><small>学校費用</small><b>{formatYen(fourYearCost.schoolCostYen / 10000)}</b></div><div><small>教材・実習</small><b>{formatYen(fourYearCost.annualExtraCostYen / 10000)}</b></div><div><small>住居費</small><b>{formatYen(fourYearCost.housingCostYen / 10000)}</b></div><div><small>生活・通学</small><b>{formatYen(fourYearCost.livingCostYen / 10000)}</b></div></div>{livingMode === 'away' && selectedCostSchool?.housing && <p className="info simulator-note">家賃目安：月{formatYen(selectedCostSchool.housing.rentMonthlyYen / 10000)}（{selectedCostSchool.housing.estimateLabel}）。管理費月0.5万円、契約初期費用は家賃5か月分で仮置きしています。<br /><a href={selectedCostSchool.housing.sourceUrl} target="_blank" rel="noreferrer">相場の出典：{selectedCostSchool.housing.sourceTitle} ↗</a></p>}{livingMode === 'home' && <p className="info simulator-note">自宅通学は生活・通学費を月2万円で仮置き。住居費は0円として計算しています。</p>}<p className="info simulator-note">住居費は公式な学校情報ではなく、周辺の相場・掲載例による推定です。調査日：2026.08.27</p></div></div></div></section>
 
         <section><div className="wrap"><div className="section-head"><div className="eyebrow">情報掲載方針</div><h2>判断に必要な情報を、分かりやすく。</h2><p>特定の学校を一律に評価するのではなく、進路を検討するための客観的な情報を整理して提供します。</p></div><div className="principles"><div className="principle"><div className="icon">✓</div><h3>広告と順位を分離</h3><p>学校からの広告掲載があっても、検索順位や比較評価には反映しません。</p></div><div className="principle"><div className="icon">↻</div><h3>年度と更新日を表示</h3><p>すべての主要数値に対象年度、取得日、データの定義を記載します。</p></div><div className="principle"><div className="icon">i</div><h3>欠けている情報も示す</h3><p>推定値や未確認情報を、確定データのように見せない設計を徹底します。</p></div></div></div></section>
         <section id="data-details"><div className="wrap"><div className="section-head"><div className="eyebrow">費用の内訳</div><h2>初期費用と教材・実習費も確認</h2><p>4年間の既知費用とは別に、出願時の検定料や、学校が公開している教材・実習関連費を表示しています。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>費用項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>入試検定料</td>{schools.map((school) => <td key={school.id}>{school.entranceExamFeeLabel}</td>)}</tr><tr><td>教材・実習費</td>{schools.map((school) => <td key={school.id}>{school.materialsCostLabel}</td>)}</tr></tbody></table></div></div></section>

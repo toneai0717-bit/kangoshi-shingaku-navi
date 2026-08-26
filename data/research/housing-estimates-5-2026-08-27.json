@@ -1,0 +1,82 @@
+{
+  "dataset": {
+    "name": "看護進学ナビ 5校周辺住居費推定",
+    "collectedAt": "2026-08-27",
+    "scope": "関東圏の看護系大学5校",
+    "methodology": [
+      "単身向けの1R・1K・1DKを中心に、学校近隣の駅または町域の家賃相場を確認",
+      "駅相場・町域レンジ・個別掲載例は推定方法を分けて表示",
+      "家賃相場は管理費・共益費を含まないため、計算では管理費月5,000円を仮置き",
+      "契約初期費用は家賃5か月分を仮置きし、引っ越し・家具家電は含めない"
+    ],
+    "limitations": [
+      "賃貸物件は更新が早く、学校から徒歩15分以内の物件数が少ない地域では駅・町域の参考値に切り替えている",
+      "家賃は公式な学校情報ではなく、不動産サイトの相場または掲載例に基づく推定値",
+      "食費、光熱費、通信費は利用者の生活条件で変わるため、別の仮設定として計算する"
+    ]
+  },
+  "estimates": [
+    {
+      "schoolId": "tokyo-metropolitan-university-nursing",
+      "referencePoint": "熊野前駅周辺",
+      "estimateType": "stationAverage",
+      "estimateLabel": "駅相場",
+      "rentMonthlyYen": 103900,
+      "managementFeeIncluded": false,
+      "collectedAt": "2026-08-27",
+      "sourceTitle": "LIFULL HOME'S 熊野前駅の家賃相場",
+      "sourceUrl": "https://www.homes.co.jp/chintai/tokyo/kumanomae_06451-st/price/",
+      "note": "看護学科の荒川キャンパスは熊野前駅から徒歩約3分。駅徒歩10分以内の1R・1K・1DK相場を学校徒歩15分圏の目安として使用。"
+    },
+    {
+      "schoolId": "saitama-prefectural-university-nursing",
+      "referencePoint": "せんげん台駅周辺",
+      "estimateType": "stationAverage",
+      "estimateLabel": "駅相場（通学経路の参考）",
+      "rentMonthlyYen": 58800,
+      "managementFeeIncluded": false,
+      "collectedAt": "2026-08-27",
+      "sourceTitle": "LIFULL HOME'S せんげん台駅の家賃相場",
+      "sourceUrl": "https://www.homes.co.jp/chintai/saitama/sengendai_04622-st/price/",
+      "note": "大学は駅から徒歩約20分またはバス利用のため、学校徒歩15分圏の相場ではなく、通学の中心となる駅周辺の参考値。"
+    },
+    {
+      "schoolId": "yokohama-city-university-nursing",
+      "referencePoint": "海の公園柴口駅周辺",
+      "estimateType": "nearbyStationFallback",
+      "estimateLabel": "近隣駅の参考値",
+      "rentMonthlyYen": 62400,
+      "managementFeeIncluded": false,
+      "collectedAt": "2026-08-27",
+      "sourceTitle": "LIFULL HOME'S 市大医学部駅周辺の家賃相場",
+      "sourceUrl": "https://www.homes.co.jp/chintai/kanagawa/shidaiigakubu_07075-st/price/",
+      "note": "市大医学部駅・福浦駅は1R・1K・1DKの相場が表示されなかったため、同路線の海の公園柴口駅の相場を参考値として使用。学校徒歩15分圏の確定値ではない。"
+    },
+    {
+      "schoolId": "chiba-university-nursing",
+      "referencePoint": "千葉市中央区亥鼻",
+      "estimateType": "districtRange",
+      "estimateLabel": "町域相場",
+      "rentMonthlyYen": 57500,
+      "rentRangeMonthlyYen": { "min": 55000, "max": 60000 },
+      "managementFeeIncluded": false,
+      "collectedAt": "2026-08-27",
+      "sourceTitle": "LIFULL HOME'S 千葉市中央区亥鼻の賃貸",
+      "sourceUrl": "https://www.homes.co.jp/chintai/chiba/chiba_chuo-city/1345F7BA46-town/list/",
+      "note": "看護学部の亥鼻キャンパス周辺の1K相場として、町域ページに記載された5.5〜6万円を採用。"
+    },
+    {
+      "schoolId": "tokyo-junshin-university-nursing",
+      "referencePoint": "八王子市滝山町・丹木町（純心女子学園バス停周辺）",
+      "estimateType": "listingSample",
+      "estimateLabel": "掲載例の目安",
+      "rentMonthlyYen": 48000,
+      "rentRangeMonthlyYen": { "min": 46000, "max": 50000 },
+      "managementFeeIncluded": false,
+      "collectedAt": "2026-08-27",
+      "sourceTitle": "LIFULL HOME'S 東京純心大学周辺の掲載例",
+      "sourceUrl": "https://www.homes.co.jp/chintai/b-1004720125370/",
+      "note": "純心女子学園バス停から徒歩3〜6分の1K掲載例をもとにした目安。市場全体の平均ではなく、掲載例のレンジ。"
+    }
+  ]
+}
