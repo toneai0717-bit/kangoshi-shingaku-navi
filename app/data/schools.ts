@@ -36,6 +36,7 @@ type RawSchool = {
     examinees: number;
     passers: number;
     passRate: number;
+    cohort?: string;
   }>;
   career?: {
     careerDecisionRate?: number;
@@ -74,12 +75,15 @@ export type School = {
   passRate: number;
   latestPassRate: number;
   latestPassCount: number;
+  latestExamineeCount: number;
+  examBasis: string;
   certificates: string;
   confidence: string;
   sourceCount: number;
   sources: SourceLink[];
   lastChecked: string;
   missingFields: string[];
+  missingFieldLabels: string[];
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
   admissionSummary: string;
@@ -96,6 +100,15 @@ export const datasetMeta = {
 const rawSchools = researchData.schools as unknown as RawSchool[];
 const sourceCatalog = researchData.sources as SourceLink[];
 
+const missingFieldLabels: Record<string, string> = {
+  textbookCost: '教科書代',
+  clinicalPracticeCost: '臨地実習関連費',
+  homeCommuteTime: '自宅からの通学時間',
+  employmentBreakdown: '就職先の内訳',
+  '2026 national exam result': '2026年の看護師国家試験結果',
+  'detailed admission allocation': '詳細な入試枠',
+};
+
 const formatMan = (yen: number) => {
   const man = yen / 10000;
   return `${man.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}万円`;
@@ -109,7 +122,10 @@ const getCostValues = (estimate?: Record<string, number | string | undefined>) =
 const formatCareerSummary = (career: RawSchool['career']) => {
   if (!career) return '未収録';
   const parts: string[] = [];
-  if (career.careerDecisionRate !== undefined) parts.push(`進路決定率 ${career.careerDecisionRate}%`);
+  if (career.careerDecisionRate !== undefined) {
+    const label = career.universityWide ? '看護学科の進路決定率' : '進路決定率';
+    parts.push(`${label} ${career.careerDecisionRate}%`);
+  }
   if (career.employed !== undefined) parts.push(`就職 ${career.employed}人`);
   if (career.advancing !== undefined) parts.push(`進学 ${career.advancing}人`);
   if (career.facultyWide) parts.push(`学部全体：就職 ${career.facultyWide.employed ?? '—'}人・進学 ${career.facultyWide.advancing ?? '—'}人`);
@@ -128,20 +144,34 @@ const formatAdmissionSummary = (admissions: RawSchool['admissions']) => {
     comprehensive: '総合型',
     schoolRecommendation: '学校推薦',
     general: '一般',
+    generalFirstTerm: '一般前期',
+    generalSecondTerm: '一般後期',
+    generalFirstTermTotal: '一般前期（合計）',
+    generalRecommendation: '一般推薦',
+    designatedSchoolRecommendation: '指定校推薦',
+    recommendation: '推薦',
+    'generalA方式': '一般A方式',
+    'generalB方式': '一般B方式',
+    specialPublicRecommendation: '特別公募推薦',
     commonTestUse: '共テ利用',
     socialAdult: '社会人',
     overseasReturnee: '海外帰国生',
   };
   return Object.entries(recruitment)
     .filter(([, value]) => value !== null)
-    .map(([key, value]) => `${labels[key] ?? key}${typeof value === 'number' ? `${value}名` : value}`)
+    .map(([key, value]) => `${labels[key] ?? 'その他の選抜区分'}${typeof value === 'number' ? `${value}名` : value}`)
     .join('・');
 };
 
 const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']) => {
   if (fee === undefined) return '未収録';
   if (typeof fee === 'number') return formatMan(fee);
-  return Object.entries(fee).map(([label, value]) => `${label} ${formatMan(value)}`).join('・');
+  const labels: Record<string, string> = {
+    standard: '通常選抜',
+    commonTestUse: '共通テスト利用',
+    multipleApplications: '複数出願',
+  };
+  return Object.entries(fee).map(([label, value]) => `${labels[label] ?? 'その他の検定料'} ${formatMan(value)}`).join('・');
 };
 
 const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
@@ -188,12 +218,15 @@ const buildSchool = (raw: RawSchool): School => {
     passRate: Math.round(passRate * 10) / 10,
     latestPassRate: latestResult?.passRate ?? 0,
     latestPassCount: latestResult?.passers ?? 0,
+    latestExamineeCount: latestResult?.examinees ?? 0,
+    examBasis: latestResult?.cohort ?? '対象区分未収録',
     certificates: qualifications.join('・'),
     confidence: raw.dataQuality.confidence === 'high' ? 'A 公式情報（初回確認）' : raw.dataQuality.confidence,
     sourceCount: raw.sourceIds.length,
     sources: raw.sourceIds.map((sourceId) => sourceCatalog.find((source) => source.id === sourceId)).filter((source): source is SourceLink => Boolean(source)),
     lastChecked: datasetMeta.collectedAt,
     missingFields: raw.dataQuality.missingFields,
+    missingFieldLabels: raw.dataQuality.missingFields.map((field) => missingFieldLabels[field] ?? field),
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
     admissionSummary: formatAdmissionSummary(raw.admissions),
