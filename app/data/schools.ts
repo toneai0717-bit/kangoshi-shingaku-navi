@@ -17,6 +17,14 @@ type RawSchool = {
     admissionCapacity?: number;
     qualifications?: string[];
   };
+  campusAccess?: {
+    nearestStation?: string | null;
+    walkMinutes?: number;
+    busMinutes?: number;
+    busFareOneWay?: number;
+    notes?: string;
+    accessNote?: string;
+  };
   admissions?: Array<{
     academicYear: number;
     selectionType?: string;
@@ -94,6 +102,7 @@ export type School = {
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
   otherInitialCostLabel: string;
+  accessSummary: string;
   admissionSummary: string;
   admissionResultSummary: string;
   careerSummary: string;
@@ -247,6 +256,20 @@ const formatOtherInitialCosts = (fee: RawSchool['fees'][number] | undefined) => 
   return `${formatMan(fee.otherInitialCostsEstimate)}${fee.otherInitialCosts ? `（${fee.otherInitialCosts}）` : ''}`;
 };
 
+const formatAccessSummary = (access: RawSchool['campusAccess']) => {
+  if (!access) return '未収録';
+  const parts: string[] = [];
+  if (access.nearestStation) parts.push(access.nearestStation);
+  if (access.busMinutes !== undefined) {
+    const fare = access.busFareOneWay !== undefined ? `・片道${access.busFareOneWay}円` : '';
+    parts.push(`バス${access.busMinutes}分${fare}`);
+  }
+  if (access.walkMinutes !== undefined) parts.push(`徒歩${access.walkMinutes}分`);
+  const route = parts.join('／');
+  const note = access.notes ?? access.accessNote;
+  return `${route || 'アクセス情報あり'}${note ? `。${note}` : ''}`;
+};
+
 const buildSchool = (raw: RawSchool): School => {
   const fee = raw.fees.find((item) => item.academicYear === 2026) ?? raw.fees[0];
   const costValues = getCostValues(fee?.knownFourYearSchoolCostEstimate);
@@ -292,6 +315,7 @@ const buildSchool = (raw: RawSchool): School => {
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
     otherInitialCostLabel: formatOtherInitialCosts(fee),
+    accessSummary: formatAccessSummary(raw.campusAccess),
     admissionSummary: formatAdmissionSummary(raw.admissions),
     admissionResultSummary: formatAdmissionResult(raw.admissions),
     careerSummary: formatCareerSummary(raw.career),

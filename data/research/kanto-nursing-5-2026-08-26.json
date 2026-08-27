@@ -352,7 +352,9 @@
         "qualificationNotes": "看護師と保健師は同時取得可能。助産師関連科目は人数制限・履修条件があり、全員が受験資格を得られるわけではない。"
       },
       "campusAccess": {
+        "address": "千葉市中央区亥鼻1-8-1",
         "nearestStation": "千葉駅からバス「千葉大看護学部入口」",
+        "notes": "1年次の普遍教育科目は西千葉キャンパス（西千葉駅から徒歩2分）、専門教育科目は亥鼻キャンパス。亥鼻へは千葉駅からバスで「千葉大看護学部入口」下車。",
         "sourceIds": ["chiba-access"]
       },
       "admissions": [
@@ -439,8 +441,9 @@
       },
       "campusAccess": {
         "address": "東京都八王子市滝山町2-600",
-        "nearestStation": null,
-        "sourceIds": ["junshin-program"]
+        "nearestStation": "JR八王子駅北口／京王八王子駅",
+        "accessNote": "各駅から西東京バスで「純心女子学園」下車。JR八王子駅から約15〜25分、京王八王子駅から約17〜27分（経由・時間帯で変動）。",
+        "sourceIds": ["junshin-access"]
       },
       "admissions": [
         {
@@ -507,7 +510,7 @@
         "confidence": "high",
         "missingFields": ["2026 national exam result", "textbookCost", "homeCommuteTime"]
       },
-      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-factbook-2025", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission"]
+      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-factbook-2025", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission", "junshin-access"]
     }
   ],
   "sources": [
@@ -540,7 +543,7 @@
     { "id": "ycu-career-2026", "title": "横浜市立大学 2026年3月卒業 看護学科就職先", "url": "https://www.yokohama-cu.ac.jp/career_dev/career/dr3e64000001vsw6-att/2026_nur_course.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-scholarships", "title": "横浜市立大学 奨学金", "url": "https://www.yokohama-cu.ac.jp/students/scholarship/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "ycu-hospital-scholarship-2026", "title": "横浜市立大学附属病院 看護職員修学資金", "url": "https://www.yokohama-cu.ac.jp/nur_rec/recruit/r08nur_suisen.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "chiba-access", "title": "千葉大学看護学部 交通アクセス", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index24.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-access", "title": "千葉大学看護学部 交通アクセス", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index24.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "chiba-program", "title": "千葉大学看護学部 2027パンフレット", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index14.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admissions-2027", "title": "千葉大学看護学部 2027年度入学者選抜概要", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
@@ -558,6 +561,7 @@
     { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career-2026", "title": "東京純心大学 2027年度大学案内 看護学科就職率", "url": "https://www.t-junshin.ac.jp/univ/lp2026/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-scholarships", "title": "東京純心大学 奨学金・学生支援", "url": "https://www.t-junshin.ac.jp/univ/col/h30_012.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
-    { "id": "junshin-admission", "title": "東京純心大学 看護学部の学び・入試", "url": "https://www.t-junshin.ac.jp/univ/admission.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" }
+    { "id": "junshin-admission", "title": "東京純心大学 看護学部の学び・入試", "url": "https://www.t-junshin.ac.jp/univ/admission.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-access", "title": "東京純心大学 アクセスマップ", "url": "https://www.t-junshin.ac.jp/univ/access.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" }
   ]
 }
