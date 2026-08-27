@@ -14,7 +14,8 @@
       "生活費・自宅からの通学時間は出発地点が必要なため未収録",
       "教科書、ユニフォーム、予防接種などは学校ごとに公開範囲が異なるため一部未収録",
       "学費の4年間推計は、記載した費用だけを合算した試算であり、将来の改定を含まない",
-      "入試結果は選抜区分ごとの公式公表値を優先し、募集人員と入学定員を混同しない"
+      "入試結果は選抜区分ごとの公式公表値を優先し、募集人員と入学定員を混同しない",
+      "東京純心大学の2026年看護師国家試験値は大学公式の最新表が確認できず、第三者の学校別集計を補助的に使用"
     ]
   },
   "schools": [
@@ -285,12 +286,13 @@
           "admissionFee": { "yokohamaResident": 141000, "outsideYokohama": 282000 },
           "annualTuition": 557400,
           "experimentalPracticeFee": { "annualFromYear2": 20000 },
+          "additionalCostNote": "教科書は別途。実習着・物品は別途購入の場合があり、看護学科生は実習中の補償制度Willへの加入が必要。具体額は入学手続時に案内。",
           "knownFourYearSchoolCostEstimate": {
             "yokohamaResident": 2478600,
             "outsideYokohama": 2619600,
             "calculation": "入学料＋授業料年額×4＋実験実習費2〜4年次。施設設備費等は別資料・年度差があるため未算入。"
           },
-          "sourceIds": ["ycu-fees-2026"]
+          "sourceIds": ["ycu-fees-2026", "ycu-fees-2026-admission-guide"]
         }
       ],
       "nationalExamResults": [
@@ -323,7 +325,7 @@
         "confidence": "high",
         "missingFields": ["textbookCost", "employmentBreakdown", "homeCommuteTime"]
       },
-      "sourceIds": ["ycu-access", "ycu-program", "ycu-admissions-2027", "ycu-admission速報-2026", "ycu-fees-2026", "ycu-national-exam", "ycu-career-2026", "ycu-scholarships", "ycu-hospital-scholarship-2026"]
+      "sourceIds": ["ycu-access", "ycu-program", "ycu-admissions-2027", "ycu-admission速報-2026", "ycu-fees-2026", "ycu-fees-2026-admission-guide", "ycu-national-exam", "ycu-career-2026", "ycu-scholarships", "ycu-hospital-scholarship-2026"]
     },
     {
       "id": "chiba-university-nursing",
@@ -473,15 +475,17 @@
           "admissionFee": 200000,
           "annualTuition": 1630000,
           "breakdown": { "tuition": 1100000, "educationEnhancement": 290000, "practicalTraining": 240000 },
+          "additionalCostNote": "電子テキスト代、書籍テキスト代、教材費、実習着代、ノートパソコン代などが別途。実技実習費には感染症抗体検査、傷害保険、実習着1着などを含む。",
           "otherMandatoryCosts": { "studentAssociationAnnual": 10000, "parentsAssociationFourYear": 100000, "systemManagementFeeFirstYear": 640 },
           "knownFourYearSchoolCostEstimate": {
             "value": 6860640,
             "calculation": "入学金＋授業料等年額×4＋学生会費4年＋後援会費＋学費システム管理費。教科書等は除外。"
           },
-          "sourceIds": ["junshin-fees"]
+          "sourceIds": ["junshin-fees", "junshin-fees-2026-guide"]
         }
       ],
       "nationalExamResults": [
+        { "examYear": 2026, "academicYear": 2025, "license": "看護師", "cohort": "新卒（第三者集計）", "examinees": 62, "passers": 53, "passRate": 85.5 },
         { "examYear": 2025, "academicYear": 2024, "license": "看護師", "cohort": "新卒", "examinees": 59, "passers": 53, "passRate": 89.8 },
         { "examYear": 2024, "academicYear": 2023, "license": "看護師", "cohort": "新卒", "examinees": 65, "passers": 56, "passRate": 86.2 },
         { "examYear": 2023, "academicYear": 2022, "license": "看護師", "cohort": "新卒", "examinees": 67, "passers": 54, "passRate": 80.5 }
@@ -508,9 +512,9 @@
       "dataQuality": {
         "status": "partial-but-publishable-for-research",
         "confidence": "high",
-        "missingFields": ["2026 national exam result", "textbookCost", "homeCommuteTime"]
+        "missingFields": ["2026 national exam result (official source not found)", "textbookCost", "homeCommuteTime"]
       },
-      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-factbook-2025", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission", "junshin-access"]
+      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-factbook-2025", "junshin-fees", "junshin-national-exam", "junshin-national-exam-2026", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission", "junshin-access"]
     }
   ],
   "sources": [
@@ -538,7 +542,8 @@
     { "id": "ycu-program", "title": "横浜市立大学 医学部看護学科", "url": "https://www.yokohama-cu.ac.jp/nur/nc/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-admissions-2027", "title": "横浜市立大学 医学部看護学科 前期日程", "url": "https://www.yokohama-cu.ac.jp/admissions/admissions/general_selection/Nursing_Course.html", "sourceType": "university-official", "publishedOrUpdated": "2026-06-10", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-admission速報-2026", "title": "横浜市立大学 2026年度入学試験志願者数速報", "url": "https://www.yokohama-cu.ac.jp/admissions/news/2025/2026_report_ippan.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "ycu-fees-2026", "title": "横浜市立大学 令和8年度授業料・実験実習費", "url": "https://www.yokohama-cu.ac.jp/students/tuition.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-fees-2026", "title": "横浜市立大学 令和8年度授業料・実験実習費", "url": "https://www.yokohama-cu.ac.jp/students/tuition.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
+    { "id": "ycu-fees-2026-admission-guide", "title": "横浜市立大学 2026年度一般選抜募集要項（看護学科の保険・教材費注記）", "url": "https://www.yokohama-cu.ac.jp/admissions/admissions/j8907d0000001tq2-att/2026_ippan_youkou_2.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "ycu-national-exam", "title": "横浜市立大学 国家試験合格状況", "url": "https://www.yokohama-cu.ac.jp/nur/nc/license.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-career-2026", "title": "横浜市立大学 2026年3月卒業 看護学科就職先", "url": "https://www.yokohama-cu.ac.jp/career_dev/career/dr3e64000001vsw6-att/2026_nur_course.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-scholarships", "title": "横浜市立大学 奨学金", "url": "https://www.yokohama-cu.ac.jp/students/scholarship/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
@@ -556,8 +561,10 @@
     { "id": "junshin-capacity", "title": "東京純心大学 収容定員及び在籍数", "url": "https://www.t-junshin.ac.jp/univ/col/summary__trashed/fixed_number.html", "sourceType": "university-official", "publishedOrUpdated": "2026-05-01", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
     { "id": "junshin-factbook-2025", "title": "東京純心大学 FACT BOOK 2025", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/FACT_BOOK2025.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
-    { "id": "junshin-fees", "title": "東京純心大学 検定料・授業料", "url": "https://www.t-junshin.ac.jp/univ/pro/price.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-fees", "title": "東京純心大学 検定料・授業料", "url": "https://www.t-junshin.ac.jp/univ/pro/price.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
+    { "id": "junshin-fees-2026-guide", "title": "東京純心大学 2026年度学生募集要項（学費・別途費用）", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R8_exam_guide_20250709.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "junshin-national-exam", "title": "東京純心大学 自己点検評価書・看護師国家試験データ", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R6zikotenkenhyokasyo.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-national-exam-2026", "title": "第115回看護師国家試験 学校別合格者状況", "url": "https://smt.ishin.jp/support/kokka/pdf/kango26.pdf", "sourceType": "third-party-publication", "accessedAt": "2026-08-27", "verificationStatus": "cross-checked" },
     { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career-2026", "title": "東京純心大学 2027年度大学案内 看護学科就職率", "url": "https://www.t-junshin.ac.jp/univ/lp2026/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-scholarships", "title": "東京純心大学 奨学金・学生支援", "url": "https://www.t-junshin.ac.jp/univ/col/h30_012.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },

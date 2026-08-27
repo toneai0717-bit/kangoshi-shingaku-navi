@@ -40,6 +40,7 @@ type RawSchool = {
     insuranceEstimateFourYear?: number;
     otherInitialCostsEstimate?: number;
     otherInitialCosts?: string;
+    additionalCostNote?: string;
     practicalFee?: number;
     breakdown?: { practicalTraining?: number };
     experimentalPracticeFee?: { annualFromYear2?: number };
@@ -102,6 +103,7 @@ export type School = {
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
   otherInitialCostLabel: string;
+  additionalCostNote: string;
   accessSummary: string;
   admissionSummary: string;
   admissionResultSummary: string;
@@ -124,6 +126,7 @@ const missingFieldLabels: Record<string, string> = {
   homeCommuteTime: '自宅からの通学時間',
   employmentBreakdown: '就職先の内訳',
   '2026 national exam result': '2026年の看護師国家試験結果',
+  '2026 national exam result (official source not found)': '2026年の看護師国家試験結果（公式未確認）',
   'detailed admission allocation': '詳細な入試枠',
 };
 
@@ -256,6 +259,8 @@ const formatOtherInitialCosts = (fee: RawSchool['fees'][number] | undefined) => 
   return `${formatMan(fee.otherInitialCostsEstimate)}${fee.otherInitialCosts ? `（${fee.otherInitialCosts}）` : ''}`;
 };
 
+const formatAdditionalCostNote = (fee: RawSchool['fees'][number] | undefined) => fee?.additionalCostNote ?? '未収録';
+
 const formatAccessSummary = (access: RawSchool['campusAccess']) => {
   if (!access) return '未収録';
   const parts: string[] = [];
@@ -315,6 +320,7 @@ const buildSchool = (raw: RawSchool): School => {
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
     otherInitialCostLabel: formatOtherInitialCosts(fee),
+    additionalCostNote: formatAdditionalCostNote(fee),
     accessSummary: formatAccessSummary(raw.campusAccess),
     admissionSummary: formatAdmissionSummary(raw.admissions),
     admissionResultSummary: formatAdmissionResult(raw.admissions),
