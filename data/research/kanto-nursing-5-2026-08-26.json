@@ -72,6 +72,19 @@
           },
           "notes": "大学公表の学部入試状況表に掲載された看護学科行。区分別の列定義は原表を併記して再確認する。",
           "sourceIds": ["tmu-admission-results-2025"]
+        },
+        {
+          "academicYear": 2025,
+          "selectionType": "generalFirstTerm",
+          "result": {
+            "recruitment": 35,
+            "applicants": 94,
+            "applicantRatio": 2.7,
+            "admitted": 43,
+            "enrollees": 35
+          },
+          "notes": "一般選抜前期日程の公式表。募集人員・志願者・倍率・合格者・入学者の列定義を確認済み。",
+          "sourceIds": ["tmu-admission-results-2025-general"]
         }
       ],
       "fees": [
@@ -365,10 +378,11 @@
           "admissionFee": 282000,
           "annualTuition": 642960,
           "knownFourYearSchoolCostEstimate": {
-            "value": 2853840,
-            "calculation": "入学料＋授業料年額×4。保険料、後援会費、教科書、PC等は別。"
+            "value": 2931210,
+            "calculation": "入学料＋授業料年額×4＋保険料5,370円＋後援会費60,000円＋同窓会費12,000円。教科書・PC等は別。"
           },
-          "otherInitialCosts": "学生教育研究災害傷害保険料、後援会費、同窓会費等が別途必要。",
+          "otherInitialCostsEstimate": 77370,
+          "otherInitialCosts": "保険料5,370円（4年分）・後援会費60,000円・同窓会費12,000円など。初年度の確認済み合計は1,002,330円。",
           "sourceIds": ["chiba-fees"]
         }
       ],
@@ -435,6 +449,18 @@
           "recruitment": { "comprehensive": 20, "schoolRecommendation": 40, "general": 20, "commonTestUse": "若干名", "socialAdult": "若干名", "overseasReturnee": "若干名" },
           "notes": "公式入試日程ページの2027年度看護学部欄を構造化。募集人員80名に対し、若干名区分の位置づけ・重複関係は募集要項で最終確認する。",
           "sourceIds": ["junshin-admissions-2027"]
+        },
+        {
+          "academicYear": 2025,
+          "result": {
+            "comprehensive": { "applicants": 37, "examinees": 37, "admitted": 37, "enrollees": 32 },
+            "schoolRecommendation": { "applicants": 31, "examinees": 31, "admitted": 31, "enrollees": 31 },
+            "general": { "recruitment": 25, "applicants": 52, "examinees": 48, "admitted": 48, "enrollees": 16 },
+            "commonTestUse": { "applicants": 5, "examinees": 2, "admitted": 2, "enrollees": 0 },
+            "socialAdult": { "applicants": 1, "examinees": 1, "admitted": 1, "enrollees": 1 }
+          },
+          "notes": "公式FACT BOOK 2025の看護学部・選抜区分別表。募集定員が若干名の区分は数値を補完せず、実績のみ構造化。",
+          "sourceIds": ["junshin-factbook-2025"]
         }
       ],
       "fees": [
@@ -481,7 +507,7 @@
         "confidence": "high",
         "missingFields": ["2026 national exam result", "textbookCost", "homeCommuteTime"]
       },
-      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission"]
+      "sourceIds": ["junshin-program", "junshin-capacity", "junshin-admissions-2027", "junshin-factbook-2025", "junshin-fees", "junshin-national-exam", "junshin-career", "junshin-career-2026", "junshin-scholarships", "junshin-admission"]
     }
   ],
   "sources": [
@@ -489,6 +515,7 @@
     { "id": "tmu-program", "title": "東京都立大学 看護学科概要", "url": "https://www.hs.tmu.ac.jp/faculty/kango/info.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-admissions-2027", "title": "東京都立大学 2027年度入試募集人員", "url": "https://www.tmu.ac.jp/entrance/faculty/34824.html?d=assets/files/download/entrance/guide/2026/2027bosyuujinin.pdf", "sourceType": "official-pdf", "publishedOrUpdated": "2026-07-28", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
     { "id": "tmu-admission-results-2025", "title": "東京都立大学 2025年度入試状況（学部）", "url": "https://www.tmu.ac.jp/university/kyouikujouhoutop/legal-matters/sinrotop/22536.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "tmu-admission-results-2025-general", "title": "東京都立大学 2025年度入学試験実施状況（一般選抜）", "url": "https://www.tmu.ac.jp/entrance/faculty/37427/condition.html?d=assets/files/download/entrance/2025_entrance_examination_implementation_status.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "tmu-fees", "title": "東京都立大学 学費・減免制度・奨学金制度等", "url": "https://www.tmu.ac.jp/campuslife_career/expenses.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "tmu-fees-2026-exemption", "title": "東京都立大学 2026年度授業料等減免・分納申請", "url": "https://gs.tmu.ac.jp/exemption/996.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "tmu-national-exam", "title": "東京都立大学 国家資格試験合格状況", "url": "https://www.hs.tmu.ac.jp/campus/passing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
@@ -518,13 +545,14 @@
     { "id": "chiba-admissions-2027", "title": "千葉大学看護学部 2027年度入学者選抜概要", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "chiba-admission-fee", "title": "千葉大学看護学部 よくいただくお問い合わせ（入学検定料）", "url": "https://www.n.chiba-u.jp/contact/faq.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "chiba-fees", "title": "千葉大学看護学部 学費等", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-fees", "title": "千葉大学看護学部 学費等", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "chiba-national-exam", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-career", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-scholarships", "title": "千葉大学 2027大学案内 奨学金・授業料支援", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index21.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "junshin-program", "title": "東京純心大学 看護学部看護学科", "url": "https://www.t-junshin.ac.jp/univ/dep07.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-capacity", "title": "東京純心大学 収容定員及び在籍数", "url": "https://www.t-junshin.ac.jp/univ/col/summary__trashed/fixed_number.html", "sourceType": "university-official", "publishedOrUpdated": "2026-05-01", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
+    { "id": "junshin-factbook-2025", "title": "東京純心大学 FACT BOOK 2025", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/FACT_BOOK2025.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "junshin-fees", "title": "東京純心大学 検定料・授業料", "url": "https://www.t-junshin.ac.jp/univ/pro/price.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-national-exam", "title": "東京純心大学 自己点検評価書・看護師国家試験データ", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R6zikotenkenhyokasyo.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },

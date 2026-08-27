@@ -19,6 +19,7 @@ type RawSchool = {
   };
   admissions?: Array<{
     academicYear: number;
+    selectionType?: string;
     recruitment?: Record<string, number | string | null>;
     result?: Record<string, unknown>;
     notes?: string;
@@ -29,6 +30,8 @@ type RawSchool = {
     annualTuition?: number;
     textbookAndUniformEstimateAnnual?: { min: number; max: number };
     insuranceEstimateFourYear?: number;
+    otherInitialCostsEstimate?: number;
+    otherInitialCosts?: string;
     practicalFee?: number;
     breakdown?: { practicalTraining?: number };
     experimentalPracticeFee?: { annualFromYear2?: number };
@@ -90,6 +93,7 @@ export type School = {
   missingFieldLabels: string[];
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
+  otherInitialCostLabel: string;
   admissionSummary: string;
   admissionResultSummary: string;
   careerSummary: string;
@@ -169,8 +173,10 @@ const formatAdmissionSummary = (admissions: RawSchool['admissions']) => {
 };
 
 const formatAdmissionResult = (admissions: RawSchool['admissions']) => {
-  const admission = admissions?.find((item) => item.result)?.result;
-  const academicYear = admissions?.find((item) => item.result)?.academicYear;
+  const admissionRecord = admissions?.find((item) => item.selectionType === 'generalFirstTerm' && item.result)
+    ?? admissions?.find((item) => item.result);
+  const admission = admissionRecord?.result;
+  const academicYear = admissionRecord?.academicYear;
   if (!admission || academicYear === undefined) return '未収録';
 
   const formatRow = (label: string, row: Record<string, unknown>) => {
@@ -188,13 +194,14 @@ const formatAdmissionResult = (admissions: RawSchool['admissions']) => {
   if (rows.length) return `${academicYear}年度：${rows.join(' / ')}`;
 
   if (typeof admission.applicants === 'number') {
+    const selectionLabel = admissionRecord.selectionType === 'generalFirstTerm' ? ' 一般前期' : '';
     const applicants = `志願${admission.applicants}人`;
     const examinees = typeof admission.examinees === 'number' ? `・受験${admission.examinees}人` : '';
     const finalPassers = typeof admission.finalPassers === 'number' ? `・合格${admission.finalPassers}人` : '';
     const enrollees = typeof admission.enrollees === 'number' ? `・入学${admission.enrollees}人` : '';
     const ratio = typeof admission.applicantRatio === 'number' ? `・倍率${admission.applicantRatio}` : '';
     const note = admission.departmentCapacity !== undefined ? '（区分定義は原表確認）' : '';
-    return `${academicYear}年度：${applicants}${examinees}${finalPassers}${enrollees}${ratio}${note}`;
+    return `${academicYear}年度${selectionLabel}：${applicants}${examinees}${finalPassers}${enrollees}${ratio}${note}`;
   }
 
   if (typeof admission.generalA方式Applicants === 'number') {
@@ -233,6 +240,11 @@ const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
   if (practicalTraining === undefined) return '未収録';
   const fromYear = fee.experimentalPracticeFee?.annualFromYear2 ? '（2年次〜）' : '';
   return `実習費 年${formatMan(practicalTraining)}${fromYear}`;
+};
+
+const formatOtherInitialCosts = (fee: RawSchool['fees'][number] | undefined) => {
+  if (!fee?.otherInitialCostsEstimate) return '未収録';
+  return `${formatMan(fee.otherInitialCostsEstimate)}${fee.otherInitialCosts ? `（${fee.otherInitialCosts}）` : ''}`;
 };
 
 const buildSchool = (raw: RawSchool): School => {
@@ -279,6 +291,7 @@ const buildSchool = (raw: RawSchool): School => {
     missingFieldLabels: raw.dataQuality.missingFields.map((field) => missingFieldLabels[field] ?? field),
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
+    otherInitialCostLabel: formatOtherInitialCosts(fee),
     admissionSummary: formatAdmissionSummary(raw.admissions),
     admissionResultSummary: formatAdmissionResult(raw.admissions),
     careerSummary: formatCareerSummary(raw.career),
