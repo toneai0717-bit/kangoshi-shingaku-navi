@@ -37,4 +37,10 @@ assert.equal(junshinResult.general.applicants, 52);
 assert.equal(junshinResult.general.admitted, 48);
 assert.equal(junshinResult.general.enrollees, 16);
 
+const chibaAccess = chiba.campusAccess;
+assert.equal(chibaAccess.address, '千葉市中央区亥鼻1-8-1');
+assert.match(chibaAccess.notes, /西千葉/);
+assert.equal(junshin.campusAccess.nearestStation, 'JR八王子駅北口／京王八王子駅');
+assert.match(junshin.campusAccess.accessNote, /純心女子学園/);
+
 console.log('research data tests passed');
