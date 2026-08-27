@@ -43,4 +43,11 @@ assert.match(chibaAccess.notes, /西千葉/);
 assert.equal(junshin.campusAccess.nearestStation, 'JR八王子駅北口／京王八王子駅');
 assert.match(junshin.campusAccess.accessNote, /純心女子学園/);
 
+const junshinLatestExam = junshin.nationalExamResults.find((result) => result.examYear === 2026);
+assert.equal(junshinLatestExam.examinees, 62);
+assert.equal(junshinLatestExam.passers, 53);
+assert.equal(junshinLatestExam.passRate, 85.5);
+assert.match(junshinLatestExam.cohort, /第三者集計/);
+assert.ok(data.sources.some((source) => source.id === 'junshin-national-exam-2026'));
+
 console.log('research data tests passed');
