@@ -2,7 +2,7 @@
   "dataset": {
     "name": "関東圏 看護系大学 初回収集データ",
     "schemaVersion": "0.1.0",
-    "collectedAt": "2026-08-26",
+    "collectedAt": "2026-08-27",
     "scope": {
       "prefectures": ["東京都", "埼玉県", "千葉県", "神奈川県"],
       "schoolType": "4年制大学の看護系学部・学科",
@@ -107,7 +107,7 @@
         "sourceIds": ["tmu-career", "tmu-career-report-2024"]
       },
       "financialAid": {
-        "summary": "東京都立大学・東京都の授業料減免、奨学金制度を案内（制度ごとの対象・金額は個別確認）",
+        "summary": "2026年度の授業料減免は、モデル世帯の年収目安が約478万円未満なら全額免除、約478万〜674万円未満なら半額減額の基準を案内（世帯状況で判定・申請審査あり）。都内子育て世帯・多子世帯向け制度も別要件で案内。",
         "sourceIds": ["tmu-fees"]
       },
       "practice": {
@@ -298,7 +298,7 @@
         "sourceIds": ["ycu-career-2026"]
       },
       "financialAid": {
-        "summary": "横浜市立大学の奨学金に加え、附属2病院の看護職向け奨学金あり。2026年度は月額3万円・10名、卒業後に附属病院で2年以上勤務すると返還免除の条件。",
+        "summary": "神奈川県看護師等修学資金（看護学科学生）：貸与、一般月額1.7万円・特例月額4万円、返還免除あり。附属2病院の看護職向け修学資金は2026年度に月額3万円・10名、卒業後に附属病院で2年以上勤務すると返還免除の条件。",
         "sourceIds": ["ycu-scholarships", "ycu-hospital-scholarship-2026"]
       },
       "practice": {
@@ -352,8 +352,8 @@
           "academicYear": 2026,
           "result": {
             "generalFirstTerm": { "recruitment": 49, "applicants": 167, "examinees": 150, "finalPassers": 61, "enrollees": 58, "applicantRatio": 3.4 },
-            "recommendation": { "recruitment": 24, "applicants": 62, "examinees": 62, "finalPassers": 21, "enrollees": 21 },
-            "socialAdult": { "recruitment": 7, "applicants": 6, "examinees": 6, "finalPassers": 2, "enrollees": 1 }
+            "recommendation": { "recruitment": 24, "applicants": 62, "examinees": 62, "finalPassers": 21, "enrollees": 21, "applicantRatio": 2.6 },
+            "socialAdult": { "recruitment": 7, "applicants": 6, "examinees": 6, "finalPassers": 2, "enrollees": 1, "applicantRatio": 0.9 }
           },
           "sourceIds": ["chiba-admission-results"]
         }
@@ -388,7 +388,7 @@
         "sourceIds": ["chiba-career"]
       },
       "financialAid": {
-        "summary": "日本学生支援機構、千葉大学の授業料免除・徴収猶予、高等教育の修学支援新制度を案内",
+        "summary": "JASSO第一種（無利子）は自宅月2・3・4.5万円、自宅外月2・3・4・5.1万円から選択。第二種（有利子）は月2〜12万円。給付型は区分により自宅月9,800〜29,200円、自宅外月16,700〜66,700円で、採用者は入学料・授業料減免の対象。",
         "sourceIds": ["chiba-scholarships"]
       },
       "dataQuality": {
@@ -468,8 +468,8 @@
         "sourceIds": ["junshin-career", "junshin-career-2026", "junshin-program"]
       },
       "financialAid": {
-        "summary": "大学独自の給付型奨学金に加え、聖マリアンナ医科大学病院・八王子山王病院などの貸与/返還免除型制度、日本学生支援機構等を案内",
-        "programs": ["江角記念奨学金（給付）", "東京純心大学後援会奨学金（20万円給付）", "聖マリアンナ医科大学病院等の勤務条件付き奨学金", "日本学生支援機構", "高等教育の修学支援新制度"],
+        "summary": "大学独自の給付型奨学金に加え、聖マリアンナ医科大学病院（月5万円、3年次後期から）・永生会（1年目最大92万円、2年目以降年72万円）・八王子山王病院（月5万円まで）などの貸与/返還免除型制度、日本学生支援機構等を案内。いずれも勤務等の条件確認が必要。",
+        "programs": ["江角記念奨学金（給付）", "東京純心大学後援会奨学金（20万円給付）", "聖マリアンナ医科大学病院（貸与・月5万円、3年次後期から。指定病院勤務で返還免除の可能性）", "永生会（貸与・1年目最大92万円、2年目以降年72万円。グループ病院勤務で返還免除の可能性）", "八王子山王病院（貸与・月5万円まで。卒業後直ちに勤務で返還免除の可能性）", "特別選抜奨学金（一般選抜1期は授業料・教育充実費を全額免除、一般選抜2期等は一部免除）", "日本学生支援機構", "高等教育の修学支援新制度"],
         "sourceIds": ["junshin-scholarships"]
       },
       "practice": {
@@ -489,7 +489,7 @@
     { "id": "tmu-program", "title": "東京都立大学 看護学科概要", "url": "https://www.hs.tmu.ac.jp/faculty/kango/info.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-admissions-2027", "title": "東京都立大学 2027年度入試募集人員", "url": "https://www.tmu.ac.jp/entrance/faculty/34824.html?d=assets/files/download/entrance/guide/2026/2027bosyuujinin.pdf", "sourceType": "official-pdf", "publishedOrUpdated": "2026-07-28", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
     { "id": "tmu-admission-results-2025", "title": "東京都立大学 2025年度入試状況（学部）", "url": "https://www.tmu.ac.jp/university/kyouikujouhoutop/legal-matters/sinrotop/22536.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
-    { "id": "tmu-fees", "title": "東京都立大学 学費・減免制度・奨学金制度等", "url": "https://www.tmu.ac.jp/campuslife_career/expenses.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "tmu-fees", "title": "東京都立大学 学費・減免制度・奨学金制度等", "url": "https://www.tmu.ac.jp/campuslife_career/expenses.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "tmu-national-exam", "title": "東京都立大学 国家資格試験合格状況", "url": "https://www.hs.tmu.ac.jp/campus/passing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-career", "title": "東京都立大学 看護学科 就職・進学先", "url": "https://www.tmu.ac.jp/academics/hs/nursing.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "tmu-career-report-2024", "title": "東京都立大学 2024年度就職・進学状況", "url": "https://www.houjin-tmu.ac.jp/wp/wp-content/uploads/2025/04/1e1d1566-3575-45c1-a345-85910c612e05.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
@@ -510,17 +510,17 @@
     { "id": "ycu-fees-2026", "title": "横浜市立大学 令和8年度授業料・実験実習費", "url": "https://www.yokohama-cu.ac.jp/students/tuition.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-national-exam", "title": "横浜市立大学 国家試験合格状況", "url": "https://www.yokohama-cu.ac.jp/nur/nc/license.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "ycu-career-2026", "title": "横浜市立大学 2026年3月卒業 看護学科就職先", "url": "https://www.yokohama-cu.ac.jp/career_dev/career/dr3e64000001vsw6-att/2026_nur_course.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "ycu-scholarships", "title": "横浜市立大学 奨学金", "url": "https://www.yokohama-cu.ac.jp/students/scholarship/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "ycu-scholarships", "title": "横浜市立大学 奨学金", "url": "https://www.yokohama-cu.ac.jp/students/scholarship/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "ycu-hospital-scholarship-2026", "title": "横浜市立大学附属病院 看護職員修学資金", "url": "https://www.yokohama-cu.ac.jp/nur_rec/recruit/r08nur_suisen.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-access", "title": "千葉大学看護学部 交通アクセス", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index24.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-program", "title": "千葉大学看護学部 2027パンフレット", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index14.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-admissions-2027", "title": "千葉大学看護学部 2027年度入学者選抜概要", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-admission-results", "title": "千葉大学看護学部 志願者数・合格者数", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "chiba-admission-fee", "title": "千葉大学看護学部 よくいただくお問い合わせ（入学検定料）", "url": "https://www.n.chiba-u.jp/contact/faq.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-fees", "title": "千葉大学看護学部 学費等", "url": "https://www.n.chiba-u.jp/admission/undergraduate/opencampus/oc-1.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-national-exam", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "chiba-career", "title": "千葉大学看護学部 国家試験・進路", "url": "https://www.n.chiba-u.jp/students/index.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "chiba-scholarships", "title": "千葉大学 2027大学案内 奨学金・授業料支援", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index21.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "chiba-scholarships", "title": "千葉大学 2027大学案内 奨学金・授業料支援", "url": "https://www.n.chiba-u.jp/outline/pamphlet/undergraduate_2027/pageindices/index21.html", "sourceType": "official-pamphlet", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "junshin-program", "title": "東京純心大学 看護学部看護学科", "url": "https://www.t-junshin.ac.jp/univ/dep07.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-capacity", "title": "東京純心大学 収容定員及び在籍数", "url": "https://www.t-junshin.ac.jp/univ/col/summary__trashed/fixed_number.html", "sourceType": "university-official", "publishedOrUpdated": "2026-05-01", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-admissions-2027", "title": "東京純心大学 選抜試験情報・出願", "url": "https://www.t-junshin.ac.jp/univ/pro/schedule.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "partially-structured" },
@@ -528,7 +528,7 @@
     { "id": "junshin-national-exam", "title": "東京純心大学 自己点検評価書・看護師国家試験データ", "url": "https://www.t-junshin.ac.jp/univ/wp-content/uploads/R6zikotenkenhyokasyo.pdf", "sourceType": "official-pdf", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career", "title": "東京純心大学 卒業後の進路・就職先", "url": "https://www.t-junshin.ac.jp/univ/col/h30_006.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
     { "id": "junshin-career-2026", "title": "東京純心大学 2027年度大学案内 看護学科就職率", "url": "https://www.t-junshin.ac.jp/univ/lp2026/", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
-    { "id": "junshin-scholarships", "title": "東京純心大学 奨学金・学生支援", "url": "https://www.t-junshin.ac.jp/univ/col/h30_012.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" },
+    { "id": "junshin-scholarships", "title": "東京純心大学 奨学金・学生支援", "url": "https://www.t-junshin.ac.jp/univ/col/h30_012.html", "sourceType": "university-official", "accessedAt": "2026-08-27", "verificationStatus": "verified" },
     { "id": "junshin-admission", "title": "東京純心大学 看護学部の学び・入試", "url": "https://www.t-junshin.ac.jp/univ/admission.html", "sourceType": "university-official", "accessedAt": "2026-08-26", "verificationStatus": "verified" }
   ]
 }

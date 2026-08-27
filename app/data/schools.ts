@@ -20,6 +20,8 @@ type RawSchool = {
   admissions?: Array<{
     academicYear: number;
     recruitment?: Record<string, number | string | null>;
+    result?: Record<string, unknown>;
+    notes?: string;
   }>;
   fees: Array<{
     academicYear: number;
@@ -89,6 +91,7 @@ export type School = {
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
   admissionSummary: string;
+  admissionResultSummary: string;
   careerSummary: string;
   scholarshipSummary: string;
   practiceSummary: string;
@@ -165,6 +168,50 @@ const formatAdmissionSummary = (admissions: RawSchool['admissions']) => {
     .join('・');
 };
 
+const formatAdmissionResult = (admissions: RawSchool['admissions']) => {
+  const admission = admissions?.find((item) => item.result)?.result;
+  const academicYear = admissions?.find((item) => item.result)?.academicYear;
+  if (!admission || academicYear === undefined) return '未収録';
+
+  const formatRow = (label: string, row: Record<string, unknown>) => {
+    const applicants = typeof row.applicants === 'number' ? `志願${row.applicants}人` : '';
+    const examinees = typeof row.examinees === 'number' ? `・受験${row.examinees}人` : '';
+    const finalPassers = typeof row.finalPassers === 'number' ? `・合格${row.finalPassers}人` : '';
+    const enrollees = typeof row.enrollees === 'number' ? `・入学${row.enrollees}人` : '';
+    const ratio = typeof row.applicantRatio === 'number' ? `・倍率${row.applicantRatio}` : '';
+    return `${label} ${applicants}${examinees}${finalPassers}${enrollees}${ratio}`;
+  };
+
+  const rows = Object.entries(admission)
+    .filter(([, value]) => value && typeof value === 'object' && !Array.isArray(value))
+    .map(([label, value]) => formatRow(label === 'generalFirstTerm' ? '一般前期' : label === 'socialAdult' ? '社会人' : label === 'recommendation' ? '推薦' : label, value as Record<string, unknown>));
+  if (rows.length) return `${academicYear}年度：${rows.join(' / ')}`;
+
+  if (typeof admission.applicants === 'number') {
+    const applicants = `志願${admission.applicants}人`;
+    const examinees = typeof admission.examinees === 'number' ? `・受験${admission.examinees}人` : '';
+    const finalPassers = typeof admission.finalPassers === 'number' ? `・合格${admission.finalPassers}人` : '';
+    const enrollees = typeof admission.enrollees === 'number' ? `・入学${admission.enrollees}人` : '';
+    const ratio = typeof admission.applicantRatio === 'number' ? `・倍率${admission.applicantRatio}` : '';
+    const note = admission.departmentCapacity !== undefined ? '（区分定義は原表確認）' : '';
+    return `${academicYear}年度：${applicants}${examinees}${finalPassers}${enrollees}${ratio}${note}`;
+  }
+
+  if (typeof admission.generalA方式Applicants === 'number') {
+    const ratio = typeof admission.generalA方式ApplicantRatio === 'number' ? `・倍率${admission.generalA方式ApplicantRatio}` : '';
+    return `${academicYear}年度 一般A方式：志願${admission.generalA方式Applicants}人${ratio}（速報）`;
+  }
+
+  if (typeof admission.applicants === 'number' || typeof admission.admitted === 'number') {
+    const applicants = typeof admission.applicants === 'number' ? `志願${admission.applicants}人` : '';
+    const admitted = typeof admission.admitted === 'number' ? `・合格${admission.admitted}人` : '';
+    const ratio = typeof admission.applicantRatio === 'number' ? `・倍率${admission.applicantRatio}` : '';
+    return `${academicYear}年度：${applicants}${admitted}${ratio}（区分定義は原表確認）`;
+  }
+
+  return '未収録';
+};
+
 const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']) => {
   if (fee === undefined) return '未収録';
   if (typeof fee === 'number') return formatMan(fee);
@@ -233,6 +280,7 @@ const buildSchool = (raw: RawSchool): School => {
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
     admissionSummary: formatAdmissionSummary(raw.admissions),
+    admissionResultSummary: formatAdmissionResult(raw.admissions),
     careerSummary: formatCareerSummary(raw.career),
     scholarshipSummary: raw.financialAid?.summary ?? '未収録',
     practiceSummary: raw.practice?.sites?.join('・') ?? raw.practice?.notes ?? '未収録',
