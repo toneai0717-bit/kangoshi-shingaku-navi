@@ -40,6 +40,11 @@ assert.equal(junshinResult.general.enrollees, 16);
 const chibaAccess = chiba.campusAccess;
 assert.equal(chibaAccess.address, '千葉市中央区亥鼻1-8-1');
 assert.match(chibaAccess.notes, /西千葉/);
+assert.equal(tmu.campusAccess.stationForCommute, '熊野前駅');
+assert.equal(schoolById.get('saitama-prefectural-university-nursing').campusAccess.stationForCommute, 'せんげん台駅');
+assert.equal(ycu.campusAccess.stationForCommute, '市大医学部駅');
+assert.equal(chiba.campusAccess.stationForCommute, '千葉駅');
+assert.equal(junshin.campusAccess.stationForCommute, 'JR八王子駅');
 assert.equal(junshin.campusAccess.nearestStation, 'JR八王子駅北口／京王八王子駅');
 assert.match(junshin.campusAccess.accessNote, /純心女子学園/);
 

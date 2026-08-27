@@ -47,6 +47,7 @@
         "mainCampusForYears2to4": "荒川キャンパス",
         "firstYearCampus": "南大沢キャンパス",
         "nearestStation": "熊野前駅",
+        "stationForCommute": "熊野前駅",
         "walkMinutes": 3,
         "sourceIds": ["tmu-access"]
       },
@@ -162,6 +163,7 @@
       },
       "campusAccess": {
         "nearestStation": "せんげん台駅",
+        "stationForCommute": "せんげん台駅",
         "busMinutes": 5,
         "walkMinutes": 20,
         "busFareOneWay": 200,
@@ -255,6 +257,7 @@
       },
       "campusAccess": {
         "nearestStation": "市大医学部駅",
+        "stationForCommute": "市大医学部駅",
         "walkMinutes": 1,
         "sourceIds": ["ycu-access"]
       },
@@ -356,6 +359,8 @@
       "campusAccess": {
         "address": "千葉市中央区亥鼻1-8-1",
         "nearestStation": "千葉駅からバス「千葉大看護学部入口」",
+        "stationForCommute": "千葉駅",
+        "stationAccessNote": "千葉駅からキャンパスまでは路線バス区間が別途あります。駅間定期の試算にはバス代を含めません。",
         "notes": "1年次の普遍教育科目は西千葉キャンパス（西千葉駅から徒歩2分）、専門教育科目は亥鼻キャンパス。亥鼻へは千葉駅からバスで「千葉大看護学部入口」下車。",
         "sourceIds": ["chiba-access"]
       },
@@ -444,6 +449,8 @@
       "campusAccess": {
         "address": "東京都八王子市滝山町2-600",
         "nearestStation": "JR八王子駅北口／京王八王子駅",
+        "stationForCommute": "JR八王子駅",
+        "stationAccessNote": "京王八王子駅を起点にする場合は、定期代を別途確認してください。",
         "accessNote": "各駅から西東京バスで「純心女子学園」下車。JR八王子駅から約15〜25分、京王八王子駅から約17〜27分（経由・時間帯で変動）。",
         "sourceIds": ["junshin-access"]
       },

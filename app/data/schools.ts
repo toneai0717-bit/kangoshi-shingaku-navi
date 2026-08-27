@@ -19,6 +19,8 @@ type RawSchool = {
   };
   campusAccess?: {
     nearestStation?: string | null;
+    stationForCommute?: string;
+    stationAccessNote?: string;
     walkMinutes?: number;
     busMinutes?: number;
     busFareOneWay?: number;
@@ -104,6 +106,9 @@ export type School = {
   materialsCostLabel: string;
   otherInitialCostLabel: string;
   additionalCostNote: string;
+  annualExtraEstimateYen: number;
+  commuteStation: string;
+  commuteStationNote: string;
   accessSummary: string;
   admissionSummary: string;
   admissionResultSummary: string;
@@ -134,6 +139,8 @@ const formatMan = (yen: number) => {
   const man = yen / 10000;
   return `${man.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}万円`;
 };
+
+export const roughAnnualAdditionalCostYen = 50000;
 
 const getCostValues = (estimate?: Record<string, number | string | undefined>) => {
   if (!estimate) return [];
@@ -243,15 +250,25 @@ const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']
 };
 
 const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
-  if (!fee) return '未収録';
+  if (!fee) return `目安 年${formatMan(roughAnnualAdditionalCostYen)}（公開額からの概算・確定値ではない）`;
   if (fee.textbookAndUniformEstimateAnnual) {
     const insurance = fee.insuranceEstimateFourYear ? `・保険4年${formatMan(fee.insuranceEstimateFourYear)}` : '';
     return `教材・実習着 年${formatMan(fee.textbookAndUniformEstimateAnnual.min)}〜${formatMan(fee.textbookAndUniformEstimateAnnual.max)}${insurance}`;
   }
   const practicalTraining = fee.breakdown?.practicalTraining ?? fee.practicalFee ?? fee.experimentalPracticeFee?.annualFromYear2;
-  if (practicalTraining === undefined) return '未収録';
+  if (practicalTraining === undefined) return `目安 年${formatMan(roughAnnualAdditionalCostYen)}（公開額からの概算・確定値ではない）`;
   const fromYear = fee.experimentalPracticeFee?.annualFromYear2 ? '（2年次〜）' : '';
   return `実習費 年${formatMan(practicalTraining)}${fromYear}`;
+};
+
+const estimateAnnualAdditionalCost = (fee: RawSchool['fees'][number] | undefined) => {
+  if (!fee) return roughAnnualAdditionalCostYen;
+  if (fee.textbookAndUniformEstimateAnnual) {
+    return Math.round((fee.textbookAndUniformEstimateAnnual.min + fee.textbookAndUniformEstimateAnnual.max) / 2)
+      + Math.round((fee.insuranceEstimateFourYear ?? 0) / 4);
+  }
+  const practicalTraining = fee.breakdown?.practicalTraining ?? fee.practicalFee ?? fee.experimentalPracticeFee?.annualFromYear2;
+  return practicalTraining === undefined ? roughAnnualAdditionalCostYen : 0;
 };
 
 const formatOtherInitialCosts = (fee: RawSchool['fees'][number] | undefined) => {
@@ -321,6 +338,9 @@ const buildSchool = (raw: RawSchool): School => {
     materialsCostLabel: formatMaterialsCost(fee),
     otherInitialCostLabel: formatOtherInitialCosts(fee),
     additionalCostNote: formatAdditionalCostNote(fee),
+    annualExtraEstimateYen: estimateAnnualAdditionalCost(fee),
+    commuteStation: raw.campusAccess?.stationForCommute ?? raw.campusAccess?.nearestStation ?? '未収録',
+    commuteStationNote: raw.campusAccess?.stationAccessNote ?? '',
     accessSummary: formatAccessSummary(raw.campusAccess),
     admissionSummary: formatAdmissionSummary(raw.admissions),
     admissionResultSummary: formatAdmissionResult(raw.admissions),

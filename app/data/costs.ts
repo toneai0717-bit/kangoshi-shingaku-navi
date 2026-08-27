@@ -10,6 +10,7 @@ export type FourYearCostInput = {
   managementFeeMonthlyYen?: number;
   initialCostMonths?: number;
   monthlyLivingCostYen: number;
+  commutePassSixMonthYen?: number;
 };
 
 export type FourYearCost = {
@@ -17,6 +18,7 @@ export type FourYearCost = {
   annualExtraCostYen: number;
   housingCostYen: number;
   livingCostYen: number;
+  commutePassCostYen: number;
   totalCostYen: number;
 };
 
@@ -28,6 +30,7 @@ export const calculateFourYearCost = ({
   managementFeeMonthlyYen = 0,
   initialCostMonths = 0,
   monthlyLivingCostYen,
+  commutePassSixMonthYen = 0,
 }: FourYearCostInput): FourYearCost => {
   const annualExtraCostYen = annualExtraYen * 4;
   const housingCostYen = livingMode === 'away' && housing
@@ -35,12 +38,14 @@ export const calculateFourYearCost = ({
       + housing.rentMonthlyYen * initialCostMonths
     : 0;
   const livingCostYen = monthlyLivingCostYen * 48;
+  const commutePassCostYen = commutePassSixMonthYen * 8;
 
   return {
     schoolCostYen,
     annualExtraCostYen,
     housingCostYen,
     livingCostYen,
-    totalCostYen: schoolCostYen + annualExtraCostYen + housingCostYen + livingCostYen,
+    commutePassCostYen,
+    totalCostYen: schoolCostYen + annualExtraCostYen + housingCostYen + livingCostYen + commutePassCostYen,
   };
 };
