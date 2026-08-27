@@ -9,6 +9,7 @@ const ycu = schoolById.get('yokohama-city-university-nursing');
 const chiba = schoolById.get('chiba-university-nursing');
 const junshin = schoolById.get('tokyo-junshin-university-nursing');
 
+assert.ok(data.sources.some((source) => source.id === 'tmu-fees-2026-exemption'));
 assert.match(tmu.financialAid.summary, /全額免除/);
 assert.match(tmu.financialAid.summary, /半額/);
 assert.match(ycu.financialAid.summary, /1\.7万円/);
