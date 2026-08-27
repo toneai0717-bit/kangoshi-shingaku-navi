@@ -10,6 +10,7 @@ const chiba = schoolById.get('chiba-university-nursing');
 const junshin = schoolById.get('tokyo-junshin-university-nursing');
 
 assert.ok(data.sources.some((source) => source.id === 'tmu-fees-2026-exemption'));
+assert.ok(data.sources.some((source) => source.id === 'tmu-admission-results-2025-general'));
 assert.match(tmu.financialAid.summary, /全額免除/);
 assert.match(tmu.financialAid.summary, /半額/);
 assert.match(ycu.financialAid.summary, /1\.7万円/);
@@ -24,5 +25,16 @@ assert.equal(chibaResult.generalFirstTerm.applicants, 167);
 assert.equal(chibaResult.generalFirstTerm.enrollees, 58);
 assert.equal(chibaResult.recommendation.applicantRatio, 2.6);
 assert.equal(chibaResult.socialAdult.applicantRatio, 0.9);
+assert.equal(chiba.fees.find((fee) => fee.academicYear === 2026).knownFourYearSchoolCostEstimate.value, 2931210);
+
+const tmuGeneralResult = tmu.admissions.find((admission) => admission.selectionType === 'generalFirstTerm').result;
+assert.equal(tmuGeneralResult.applicants, 94);
+assert.equal(tmuGeneralResult.admitted, 43);
+assert.equal(tmuGeneralResult.enrollees, 35);
+
+const junshinResult = junshin.admissions.find((admission) => admission.academicYear === 2025).result;
+assert.equal(junshinResult.general.applicants, 52);
+assert.equal(junshinResult.general.admitted, 48);
+assert.equal(junshinResult.general.enrollees, 16);
 
 console.log('research data tests passed');
