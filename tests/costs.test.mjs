@@ -45,6 +45,7 @@ assert.equal(missingHousing.totalCostYen, 6240000);
 
 const homeWithStudentPass = calculateFourYearCost({
   schoolCostYen: 2000000,
+  entranceExamFeeYen: 30000,
   annualExtraYen: 50000,
   livingMode: 'home',
   monthlyLivingCostYen: 20000,
@@ -52,6 +53,7 @@ const homeWithStudentPass = calculateFourYearCost({
 });
 
 assert.equal(homeWithStudentPass.commutePassCostYen, 480000);
-assert.equal(homeWithStudentPass.totalCostYen, 3640000);
+assert.equal(homeWithStudentPass.entranceExamFeeYen, 30000);
+assert.equal(homeWithStudentPass.totalCostYen, 3670000);
 
 console.log('cost calculation tests passed');
