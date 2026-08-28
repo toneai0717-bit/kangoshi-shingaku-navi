@@ -4,6 +4,7 @@ export type LivingMode = 'home' | 'away';
 
 export type FourYearCostInput = {
   schoolCostYen: number;
+  entranceExamFeeYen?: number;
   annualExtraYen: number;
   livingMode: LivingMode;
   housing?: HousingEstimate;
@@ -15,6 +16,7 @@ export type FourYearCostInput = {
 
 export type FourYearCost = {
   schoolCostYen: number;
+  entranceExamFeeYen: number;
   annualExtraCostYen: number;
   housingCostYen: number;
   livingCostYen: number;
@@ -24,6 +26,7 @@ export type FourYearCost = {
 
 export const calculateFourYearCost = ({
   schoolCostYen,
+  entranceExamFeeYen = 0,
   annualExtraYen,
   livingMode,
   housing,
@@ -42,10 +45,11 @@ export const calculateFourYearCost = ({
 
   return {
     schoolCostYen,
+    entranceExamFeeYen,
     annualExtraCostYen,
     housingCostYen,
     livingCostYen,
     commutePassCostYen,
-    totalCostYen: schoolCostYen + annualExtraCostYen + housingCostYen + livingCostYen + commutePassCostYen,
+    totalCostYen: schoolCostYen + entranceExamFeeYen + annualExtraCostYen + housingCostYen + livingCostYen + commutePassCostYen,
   };
 };

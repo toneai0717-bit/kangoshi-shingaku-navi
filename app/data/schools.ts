@@ -103,6 +103,7 @@ export type School = {
   lastChecked: string;
   missingFields: string[];
   missingFieldLabels: string[];
+  entranceExamFeeYen: number;
   entranceExamFeeLabel: string;
   materialsCostLabel: string;
   otherInitialCostLabel: string;
@@ -251,6 +252,12 @@ const formatEntranceExamFee = (fee: RawSchool['fees'][number]['entranceExamFee']
   return Object.entries(fee).map(([label, value]) => `${labels[label] ?? 'その他の検定料'} ${formatMan(value)}`).join('・');
 };
 
+const getStandardEntranceExamFee = (fee: RawSchool['fees'][number] | undefined) => {
+  if (!fee?.entranceExamFee) return 0;
+  if (typeof fee.entranceExamFee === 'number') return fee.entranceExamFee;
+  return fee.entranceExamFee.standard ?? Object.values(fee.entranceExamFee)[0] ?? 0;
+};
+
 const formatMaterialsCost = (fee: RawSchool['fees'][number] | undefined) => {
   if (!fee) return `目安 年${formatMan(roughAnnualAdditionalCostYen)}（公開額からの概算・確定値ではない）`;
   if (fee.textbookAndUniformEstimateAnnual) {
@@ -336,6 +343,7 @@ const buildSchool = (raw: RawSchool): School => {
     lastChecked: datasetMeta.collectedAt,
     missingFields: raw.dataQuality.missingFields,
     missingFieldLabels: raw.dataQuality.missingFields.map((field) => missingFieldLabels[field] ?? field),
+    entranceExamFeeYen: getStandardEntranceExamFee(fee),
     entranceExamFeeLabel: formatEntranceExamFee(fee?.entranceExamFee),
     materialsCostLabel: formatMaterialsCost(fee),
     otherInitialCostLabel: formatOtherInitialCosts(fee),
