@@ -18,10 +18,10 @@ assert.match(ycu.financialAid.summary, /4万円/);
 assert.match(chiba.financialAid.summary, /自宅外/);
 assert.match(chiba.financialAid.summary, /5\.1万円/);
 assert.match(junshin.financialAid.summary, /5万円/);
-assert.ok(junshin.financialAid.programs.some((program) => program.includes('92万円')));
+assert.ok(junshin.financialAid.programs.some((program) => program.name === '医療法人社団永生会奨学金' && program.amount.includes('92万円')));
 
 const scholarshipPrograms = data.schools.flatMap((school) => school.financialAid?.programs ?? []);
-assert.equal(scholarshipPrograms.length, 16);
+assert.equal(scholarshipPrograms.length, 22);
 for (const program of scholarshipPrograms) {
   assert.equal(typeof program.name, 'string');
   assert.ok(program.name.length > 0);

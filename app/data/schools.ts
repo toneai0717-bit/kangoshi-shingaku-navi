@@ -66,7 +66,7 @@ type RawSchool = {
     destinationsWithPublishedCounts?: Array<{ destination: string; count: number }>;
     mainDestinations?: string[];
   };
-  financialAid?: { summary?: string; programs?: string[] };
+  financialAid?: { summary?: string; programs?: RawScholarshipProgram[] };
   practice?: { sites?: string[]; notes?: string };
   dataQuality: {
     confidence: string;
@@ -76,6 +76,19 @@ type RawSchool = {
 };
 
 type SourceLink = { id: string; title: string; url: string };
+
+type RawScholarshipProgram = Omit<ScholarshipProgram, 'sources'>;
+
+export type ScholarshipProgram = {
+  name: string;
+  supportType: '給付' | '授業料減免' | '貸与';
+  eligibility: string;
+  amount: string;
+  applicationTiming: string;
+  repaymentCondition: string;
+  sourceIds: string[];
+  sources: SourceLink[];
+};
 
 export type School = {
   id: string;
@@ -117,7 +130,7 @@ export type School = {
   admissionResultSummary: string;
   careerSummary: string;
   scholarshipSummary: string;
-  scholarshipPrograms: string[];
+  scholarshipPrograms: ScholarshipProgram[];
   practiceSummary: string;
 };
 
@@ -358,7 +371,12 @@ const buildSchool = (raw: RawSchool): School => {
     admissionResultSummary: formatAdmissionResult(raw.admissions),
     careerSummary: formatCareerSummary(raw.career),
     scholarshipSummary: raw.financialAid?.summary ?? '未収録',
-    scholarshipPrograms: raw.financialAid?.programs ?? [],
+    scholarshipPrograms: (raw.financialAid?.programs ?? []).map((program) => ({
+      ...program,
+      sources: program.sourceIds
+        .map((sourceId) => sourceCatalog.find((source) => source.id === sourceId))
+        .filter((source): source is SourceLink => Boolean(source)),
+    })),
     practiceSummary: raw.practice?.sites?.join('・') ?? raw.practice?.notes ?? '未収録',
   };
 };

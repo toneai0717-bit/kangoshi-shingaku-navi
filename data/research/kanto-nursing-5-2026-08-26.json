@@ -123,6 +123,11 @@
       },
       "financialAid": {
         "summary": "2026年度の授業料減免は、モデル世帯の年収目安が約478万円未満なら全額免除、約478万〜674万円未満なら半額減額の基準を案内（世帯状況で判定・申請審査あり）。都内子育て世帯・多子世帯向け制度も別要件で案内。",
+        "programs": [
+          { "name": "都内子育て世帯への授業料免除", "supportType": "授業料減免", "eligibility": "学部等の正規学生。生計維持者が基準日まで継続して東京都内に住民票を有すること。学部生は高校卒業から入学までの期間要件も確認。", "amount": "授業料を全額免除（前期・後期ごとに審査）", "applicationTiming": "前期・後期ごとに申請。2026年度は前期2月2日〜4月14日、後期7月1日〜9月15日17時。", "repaymentCondition": "返済不要。成績不振・休学・停学などは対象外となる場合あり。", "sourceIds": ["tmu-fees", "tmu-fees-2026-exemption"] },
+          { "name": "経済的困窮者への授業料減免", "supportType": "授業料減免", "eligibility": "全課程の正規学生。学生本人と生計維持者の税情報から算出する減免額算定基準額が基準に該当すること。", "amount": "授業料の全額免除または半額減額。2026年度の4人世帯モデルでは年収約478万円未満が全額、約478万〜674万円未満が半額の目安。", "applicationTiming": "前期・後期ごとに申請。2026年度は前期2月2日〜4月14日、後期7月1日〜9月15日17時。", "repaymentCondition": "返済不要。ただし、世帯状況・税控除等で審査結果が変わる。", "sourceIds": ["tmu-fees-2026-exemption"] },
+          { "name": "高等教育の修学支援新制度", "supportType": "給付", "eligibility": "低所得世帯等の学生。2025年度から多子世帯への支援も拡充。本学は国制度の対象校。", "amount": "給付奨学金と入学料・授業料減免（支援区分による。多子世帯は入学料・授業料全額免除の場合あり）。", "applicationTiming": "進学前の予約採用または入学後の大学・JASSO募集時期を確認。家計急変は原則事由発生から3か月以内。", "repaymentCondition": "給付・減免は返済不要。在籍・学業などの継続要件あり。", "sourceIds": ["tmu-fees"] }
+        ],
         "sourceIds": ["tmu-fees", "tmu-fees-2026-exemption"]
       },
       "practice": {
@@ -222,6 +227,11 @@
       },
       "financialAid": {
         "summary": "日本学生支援機構、都道府県・市区町村等の奨学金、高等教育の修学支援新制度を案内",
+        "programs": [
+          { "name": "JASSO 第一種奨学金", "supportType": "貸与", "eligibility": "学部生。家計の経済状況・学業成績等をもとに学内選考。推薦基準を満たしていても採用枠の都合で貸与されない場合あり。", "amount": "無利子。自宅通学は月2万円・3万円・4.5万円、自宅外通学は月2万円・3万円・4万円・5.1万円から選択。", "applicationTiming": "定期採用は原則4月に年1回。生計支持者の死亡・失職・災害等による家計急変は緊急・応急採用を相談。", "repaymentCondition": "貸与のため卒業後に返還。無利子でも返還義務は残る。", "sourceIds": ["spu-scholarships"] },
+          { "name": "JASSO 第二種奨学金", "supportType": "貸与", "eligibility": "学部生。家計の経済状況・学業成績等をもとに学内選考。", "amount": "有利子。月2万円〜12万円から選択。", "applicationTiming": "定期採用は原則4月に年1回。家計急変時は緊急・応急採用を大学へ相談。", "repaymentCondition": "貸与のため卒業後に返還。利子が付くため、実負担比較では差し引かない。", "sourceIds": ["spu-scholarships"] },
+          { "name": "高等教育の修学支援新制度", "supportType": "給付", "eligibility": "JASSOの給付奨学金・授業料等減免の要件を満たす学生。多子世帯などは制度の対象要件を確認。", "amount": "給付奨学金と入学料・授業料減免。支援区分・家計状況によって金額が変わる。", "applicationTiming": "前期授業料等は4月頃、後期授業料は9月頃に受付開始。家計急変は事由発生から3か月以内に相談。", "repaymentCondition": "給付・減免は返済不要。在籍・学業などの継続要件あり。", "sourceIds": ["spu-fees"] }
+        ],
         "sourceIds": ["spu-scholarships"]
       },
       "dataQuality": {
@@ -317,6 +327,11 @@
       },
       "financialAid": {
         "summary": "神奈川県看護師等修学資金（看護学科学生）：貸与、一般月額1.7万円・特例月額4万円、返還免除あり。附属2病院の看護職向け修学資金は2026年度に月額3万円・10名、卒業後に附属病院で2年以上勤務すると返還免除の条件。",
+        "programs": [
+          { "name": "高等教育の修学支援新制度", "supportType": "給付", "eligibility": "学部生。家計審査による支援区分（Ⅰ〜Ⅳ・多子世帯）に該当すること。", "amount": "給付奨学金と入学料・授業料減免。支援区分・支援内容は家計審査による。", "applicationTiming": "大学・JASSOの募集時期を確認。募集期間が限られる場合があるため、各キャンパス学務窓口へ確認。", "repaymentCondition": "給付・減免は返済不要。在籍・学業などの継続要件あり。", "sourceIds": ["ycu-scholarships"] },
+          { "name": "神奈川県看護師等修学資金", "supportType": "貸与", "eligibility": "看護学科学生。神奈川県の募集要件・大学の推薦等を満たすこと。", "amount": "一般月額1.7万円、特例月額4万円。", "applicationTiming": "年度ごとの募集要項・大学の医学教育推進課で確認。", "repaymentCondition": "貸与のため返還義務あり。卒業後の指定施設での勤務など、要件を満たすと返還免除となる場合がある。", "sourceIds": ["ycu-scholarships"] },
+          { "name": "横浜市立大学附属2病院 看護職員修学資金", "supportType": "貸与", "eligibility": "看護師・助産師免許取得見込み、成績・健康要件を満たし、卒業後すぐ附属2病院で勤務する意思がある学生。", "amount": "無利息で月額3万円、2026年度は1年間分。貸与予定人数10名。", "applicationTiming": "学校推薦試験と同時に選考。2026年度は横浜会場3月19日締切、他会場は4月17日・24日締切（消印有効）。", "repaymentCondition": "卒業後直ちに附属2病院へ就職し、看護職として2年以上勤務すると全額返還免除。", "sourceIds": ["ycu-hospital-scholarship-2026"] }
+        ],
         "sourceIds": ["ycu-scholarships", "ycu-hospital-scholarship-2026"]
       },
       "practice": {
@@ -412,6 +427,11 @@
       },
       "financialAid": {
         "summary": "JASSO第一種（無利子）は自宅月2・3・4.5万円、自宅外月2・3・4・5.1万円から選択。第二種（有利子）は月2〜12万円。給付型は区分により自宅月9,800〜29,200円、自宅外月16,700〜66,700円で、採用者は入学料・授業料減免の対象。",
+        "programs": [
+          { "name": "JASSO 第一種奨学金", "supportType": "貸与", "eligibility": "経済的理由で修学が困難な優れた学生。学業・家計等の基準と大学の推薦を確認。", "amount": "無利子。自宅通学は月2万円・3万円・4.5万円、自宅外通学は月2万円・3万円・4万円・5.1万円から選択。", "applicationTiming": "進学前の予約採用または入学後の大学・JASSO募集時期を確認。", "repaymentCondition": "貸与のため卒業後に返還。無利子でも返還義務は残る。", "sourceIds": ["chiba-scholarships"] },
+          { "name": "JASSO 第二種奨学金", "supportType": "貸与", "eligibility": "経済的理由で修学が困難な学生。学業・家計等の基準と大学の推薦を確認。", "amount": "有利子。月2万円〜12万円から1万円刻みで選択。", "applicationTiming": "進学前の予約採用または入学後の大学・JASSO募集時期を確認。", "repaymentCondition": "貸与のため卒業後に返還。利子が付くため、実負担比較では差し引かない。", "sourceIds": ["chiba-scholarships"] },
+          { "name": "給付型奨学金＋入学料・授業料減免", "supportType": "給付", "eligibility": "家計所得等により決まる支援区分に該当する学生。千葉大学は高等教育の修学支援新制度の対象。", "amount": "給付型は自宅月9,800円〜29,200円、自宅外月16,700円〜66,700円等（区分による）。採用者は入学料・授業料減免の対象。", "applicationTiming": "進学前の予約採用または入学後の大学・JASSO募集時期を確認。", "repaymentCondition": "給付・減免は返済不要。在籍・学業などの継続要件あり。", "sourceIds": ["chiba-scholarships"] }
+        ],
         "sourceIds": ["chiba-scholarships"]
       },
       "dataQuality": {
@@ -509,7 +529,18 @@
       },
       "financialAid": {
         "summary": "大学独自の給付型奨学金に加え、聖マリアンナ医科大学病院（月5万円、3年次後期から）・永生会（1年目最大92万円、2年目以降年72万円）・八王子山王病院（月5万円まで）などの貸与/返還免除型制度、日本学生支援機構等を案内。いずれも勤務等の条件確認が必要。",
-        "programs": ["江角記念奨学金（給付）", "東京純心大学後援会奨学金（20万円給付）", "聖マリアンナ医科大学病院（貸与・月5万円、3年次後期から。指定病院勤務で返還免除の可能性）", "永生会（貸与・1年目最大92万円、2年目以降年72万円。グループ病院勤務で返還免除の可能性）", "八王子山王病院（貸与・月5万円まで。卒業後直ちに勤務で返還免除の可能性）", "特別選抜奨学金（一般選抜1期は授業料・教育充実費を全額免除、一般選抜2期等は一部免除）", "日本学生支援機構", "高等教育の修学支援新制度"],
+        "programs": [
+          { "name": "江角記念奨学金", "supportType": "給付", "eligibility": "建学の精神を理解・実践し、人物・成績ともに優れた学生。3年次生から学部の若干名。", "amount": "当該年度の後期授業料相当額の範囲内。", "applicationTiming": "3年次の学内選考時期を確認。", "repaymentCondition": "給付のため返済不要。採用人数・成績条件あり。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "東京純心大学後援会奨学金", "supportType": "給付", "eligibility": "2年次以上で、学業を継続する意思があり、経済的理由で継続が困難な学生。公的機関等から年間授業料75％相当額以上の給付を受けていないこと。若干名。", "amount": "後期授業料のうち20万円。", "applicationTiming": "対象年度の学内募集・申請時期を学生窓口で確認。", "repaymentCondition": "給付のため返済不要。併給条件に注意。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "聖マリアンナ医科大学奨学金", "supportType": "貸与", "eligibility": "学業・人物・健康に優れ、卒業後に指定の聖マリアンナ医科大学関連病院で看護師・助産師として勤務可能な学生。", "amount": "月額5万円、年額60万円。3年次後期から貸与開始。", "applicationTiming": "病院・大学の募集時期と選考方法を確認。", "repaymentCondition": "貸与。指定病院での勤務等により返還免除制度あり。条件を満たさない場合は返還。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "医療法人社団永生会奨学金", "supportType": "貸与", "eligibility": "卒業後、永生会グループ病院等で常勤看護業務（夜勤あり）に従事できる学生。", "amount": "1年目は年間92万円以内、2年目以降は年間72万円以内。", "applicationTiming": "永生会・大学の募集時期と選考方法を確認。", "repaymentCondition": "貸与。グループ病院勤務等により返還免除制度あり。条件を満たさない場合は返還。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "八王子山王病院奨学金", "supportType": "貸与", "eligibility": "看護師養成課程への入学意思があり、資格取得後すぐに八王子山王病院で勤務する意思がある学生。", "amount": "月額5万円以下。", "applicationTiming": "病院の募集時期・応募書類を確認。", "repaymentCondition": "貸与。卒業後直ちに勤務する等の条件で返還免除制度あり。条件を満たさない場合は返還。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "右田病院奨学金", "supportType": "貸与", "eligibility": "卒業・免許取得後、右田病院等の法人運営事業所へ直ちに入職する学生。", "amount": "月額5万円または10万円。", "applicationTiming": "病院の募集時期・応募書類を確認。", "repaymentCondition": "貸与。法人運営事業所への勤務等により返還免除制度あり。条件を満たさない場合は返還。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "東海大学病院 松前奨学金制度", "supportType": "貸与", "eligibility": "健康で学業・人物に優れ、卒業後に東海大学医学部付属病院群で勤務することを希望し、経済的支援を必要とする学生。", "amount": "月額3万円。", "applicationTiming": "東海大学病院の募集時期・応募方法を確認。", "repaymentCondition": "貸与。付属病院群での勤務等により返還免除制度あり。条件を満たさない場合は返還。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "特待生制度", "supportType": "授業料減免", "eligibility": "一般選抜1期・2期の合格者のうち、成績上位者。入学後2〜4年次は前年度成績上位者。", "amount": "一般選抜1期1位は授業料・教育充実費を全額免除。一般選抜1期2位・2期1位は半額免除。", "applicationTiming": "一般選抜の合格判定時。入学後は前年度成績による学内選考。", "repaymentCondition": "減免のため返済不要。入学後は年度ごとの成績条件を確認。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "高等教育の修学支援新制度", "supportType": "給付", "eligibility": "学ぶ意欲があり、世帯収入基準を満たし、対象校へ進学する学生。本学は対象校。", "amount": "JASSO給付奨学金と授業料・入学料減免。支援区分によって金額が変わる。", "applicationTiming": "進学前の予約採用または入学後のJASSO・大学募集時期を確認。", "repaymentCondition": "給付・減免は返済不要。在籍・学業などの継続要件あり。", "sourceIds": ["junshin-scholarships"] },
+          { "name": "JASSO 貸与奨学金", "supportType": "貸与", "eligibility": "人物・成績ともに優れ、経済的理由で修学が困難な学生。", "amount": "第一種（無利子）は自宅月2万・3万・4万・5.4万円等、自宅外月2万・3万・4万・5万・6.4万円等。第二種は月2万〜12万円。", "applicationTiming": "募集時期は4月。大学の学生窓口で申請方法を確認。", "repaymentCondition": "貸与終了後に返還。第一種は無利子、第二種は有利子。", "sourceIds": ["junshin-scholarships"] }
+        ],
         "sourceIds": ["junshin-scholarships"]
       },
       "practice": {
