@@ -2,32 +2,20 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
-const workspace = readFileSync(new URL('../app/components/comparison-workspace.tsx', import.meta.url), 'utf8');
-const styles = readFileSync(new URL('../app/globals.css', import.meta.url), 'utf8');
 
-const rankingIndex = page.indexOf('<ComparisonWorkspace');
-const searchIndex = page.indexOf('id="search"');
-const compareIndex = page.indexOf('id="compare"');
-const costIndex = page.indexOf('id="cost"');
-const scholarshipIndex = page.indexOf('id="scholarships"');
-
-assert.ok(rankingIndex >= 0, 'ranking section should exist');
-assert.ok(rankingIndex < searchIndex, 'ranking should come before search');
-assert.ok(searchIndex < compareIndex, 'search should come before compare');
-assert.ok(compareIndex < costIndex, 'compare should come before cost details');
-assert.ok(costIndex < scholarshipIndex, 'cost should come before scholarship details');
-assert.ok(!page.includes('className="workflow-index"'), 'workflow explainer should not interrupt the decision flow');
-assert.ok(!page.includes('情報掲載方針'), 'editorial policy should stay out of the decision flow');
+assert.match(page, /id="conditions"/, 'the page should start with condition inputs');
+assert.match(page, /id="results"/, 'the page should have a single results workspace');
+assert.match(page, /className="condition-card"/, 'condition inputs should be a focused card');
+assert.match(page, /この条件で総額を見る/, 'the primary action should calculate total cost');
 assert.match(page, /useState<string\[\]>\(\[\]\)/, 'comparison should start with no selected schools');
-assert.match(page, /ComparisonWorkspace/, 'the ranking should be the comparison workspace entry point');
-assert.match(workspace, /選んだ学校の要点/, 'selected school information should be grouped in one place');
-assert.match(workspace, /id="ranking"/);
-assert.match(workspace, /4年間の実負担目安/);
-assert.match(workspace, /学校ごとの情報を一つにまとめました/);
-assert.match(styles, /main\{display:flex;flex-direction:column/);
-assert.match(styles, /#cost\{order:6\}/);
-assert.match(styles, /#commute\{order:7\}/);
-assert.match(styles, /#data-details\{order:8\}/);
-assert.match(styles, /#compare:has\(\.no-results\)\{display:none\}/, 'empty comparison should stay out of the initial flow');
+assert.match(page, /4年間の総費用ランキング/, 'results should lead with the four-year total');
+assert.match(page, /選んだ学校の情報/, 'school details should be grouped by school');
+assert.match(page, /selectedIds.length > 0/, 'comparison should be conditional on explicit selection');
+
+assert.doesNotMatch(page, /className="hero"/, 'the old marketing hero should be removed');
+assert.doesNotMatch(page, /id="search"/, 'search should not be a separate lower page');
+assert.doesNotMatch(page, /id="data-details"/, 'cost details should live in school details');
+assert.doesNotMatch(page, /className="trust"/, 'explanatory trust content should not interrupt the flow');
+assert.doesNotMatch(page, /情報掲載方針/, 'editorial policy should stay out of the decision flow');
 
 console.log('page structure tests passed');
