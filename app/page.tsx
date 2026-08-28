@@ -1,217 +1,182 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { calculateFourYearCost } from './data/costs';
-import { commuteFareKey, formatCommuteTimeEstimate, getCommuteFare, parseFareYen } from './data/commute';
+import { calculateFourYearCost, type FourYearCost } from './data/costs';
+import { formatCommuteTimeEstimate } from './data/commute';
 import { housingAssumptions } from './data/housing';
-import { preferenceToFilters, type CareerPreference, type PriorityPreference } from './data/preferences';
-import { rankSchoolsByFourYearCost } from './data/ranking';
-import { datasetMeta, formatSchoolCost, schools as sourceSchools, type ScholarshipProgram, type School } from './data/schools';
-import ComparisonWorkspace from './components/comparison-workspace';
-import CommutePassFinder from './components/commute-pass-finder';
+import { rankSchoolsByFourYearCost, type CostRankedSchool } from './data/ranking';
+import { datasetMeta, schools as sourceSchools, type School } from './data/schools';
 
 type LivingMode = 'home' | 'away';
 
 const formatYen = (man: number) => `${man.toLocaleString('ja-JP', { maximumFractionDigits: 1 })}万円`;
-const formatOptional = (value: number | null, suffix = '') => value === null ? '未収録' : `${value}${suffix}`;
-const priorityLabels: Record<PriorityPreference, string> = { cost: '学費重視', commute: '通いやすさ重視', qualification: '資格実績重視', content: '学ぶ内容重視' };
-const careerLabels: Record<CareerPreference, string> = { hospital: '大きな病院', community: '地域医療', undecided: 'まだ未定' };
 
-const ScholarshipProgramCard = ({ program }: { program: ScholarshipProgram }) => (
-  <details className="aid-program">
-    <summary><span>{program.name}</span><em>{program.supportType}</em></summary>
-    <dl>
-      <div><dt>対象者・主な条件</dt><dd>{program.eligibility}</dd></div>
-      <div><dt>支援額・内容</dt><dd>{program.amount}</dd></div>
-      <div><dt>申請時期・方法</dt><dd>{program.applicationTiming}</dd></div>
-      <div><dt>返済・継続条件</dt><dd>{program.repaymentCondition}</dd></div>
-    </dl>
-    <small>出典：{program.sources.map((source) => <a href={source.url} target="_blank" rel="noreferrer" key={source.id}>{source.title} ↗</a>)}</small>
-  </details>
+const getCommuteLabel = (school: School, commuteTimes: Record<string, string>) => {
+  const entered = commuteTimes[school.id]?.trim();
+  const minutes = entered ? Number(entered) : NaN;
+  return Number.isFinite(minutes) && minutes > 0
+    ? `${minutes}分（入力値）`
+    : formatCommuteTimeEstimate(school.commuteEstimate);
+};
+
+const getCostBreakdown = (cost: FourYearCost) => [
+  { label: '学校納付金', value: cost.schoolCostYen + cost.entranceExamFeeYen, tone: 'school' },
+  { label: '教材・実習', value: cost.annualExtraCostYen, tone: 'materials' },
+  { label: '住居・生活', value: cost.housingCostYen + cost.livingCostYen, tone: 'living' },
+  { label: '通学費', value: cost.commutePassCostYen, tone: 'commute' },
+].filter((part) => part.value > 0);
+
+const CostBreakdown = ({ cost }: { cost: FourYearCost }) => (
+  <div className="cost-breakdown">
+    <div className="cost-bar" aria-hidden="true">
+      {getCostBreakdown(cost).map((part) => <span className={`cost-bar-${part.tone}`} style={{ flexGrow: part.value }} key={part.label} />)}
+    </div>
+    <div className="cost-breakdown-list">
+      {getCostBreakdown(cost).map((part) => <div key={part.label}><span>{part.label}</span><b>{formatYen(part.value / 10000)}</b></div>)}
+      {cost.scholarshipSupportYen > 0 && <div className="support-line"><span>給付・減免</span><b>−{formatYen(cost.scholarshipSupportYen / 10000)}</b></div>}
+    </div>
+  </div>
+);
+
+const SchoolDetails = ({
+  school,
+  cost,
+  ranked,
+  commuteLabel,
+  onToggle,
+  selected,
+}: {
+  school: School;
+  cost: FourYearCost;
+  ranked?: CostRankedSchool<School>;
+  commuteLabel: string;
+  onToggle: () => void;
+  selected: boolean;
+}) => (
+  <section id="school-details" className="school-details">
+    <div className="detail-heading">
+      <div>
+        <div className="eyebrow">選んだ学校の情報</div>
+        <h2>{school.name}</h2>
+        <p>{school.faculty}・{school.prefecture}{school.city}　<span>{school.confidence}・出典 {school.sourceCount}件</span></p>
+      </div>
+      <div className="detail-actions">
+        <span>{ranked ? `${ranked.rank}位` : '詳細'}</span>
+        <button className={`select-button ${selected ? 'selected' : ''}`} onClick={onToggle}>{selected ? '比較から外す' : '比較に追加'}</button>
+      </div>
+    </div>
+    <div className="detail-total"><span>あなたの条件での4年間実負担目安</span><b>{formatYen(cost.totalCostYen / 10000)}</b><small>月あたり {formatYen(cost.totalCostYen / 48 / 10000)}相当</small></div>
+    <div className="detail-grid">
+      <article className="detail-card detail-card-cost"><h3>費用</h3><CostBreakdown cost={cost} /><p>入学金・授業料・受験料・教材費・生活費などを含む概算です。住まいの条件は上の条件入力で変更できます。</p></article>
+      <article className="detail-card"><h3>通学・暮らし</h3><dl className="detail-list"><div><dt>通学時間</dt><dd>{commuteLabel}</dd></div><div><dt>通学先</dt><dd>{school.commuteStation}</dd></div><div><dt>一人暮らし</dt><dd>{school.housing ? `家賃 ${formatYen(school.housing.rentMonthlyYen / 10000)}/月` : '住居費 未収録'}</dd></div></dl><p>{school.accessSummary}</p></article>
+      <article className="detail-card"><h3>資格・進路</h3><dl className="detail-list"><div><dt>看護師国家試験</dt><dd>{school.passRate}%（3年平均）</dd></div><div><dt>取得可能資格</dt><dd>{school.certificates}</dd></div><div><dt>卒業後</dt><dd>{school.careerSummary}</dd></div></dl><p>{school.practiceSummary}</p></article>
+      <article className="detail-card"><h3>支援</h3><p>{school.scholarshipSummary}</p>{school.scholarshipPrograms.length > 0 && <div className="program-list">{school.scholarshipPrograms.map((program) => <details key={program.name}><summary>{program.name}<span>{program.supportType}</span></summary><p>{program.eligibility}<br />{program.amount}<br />{program.applicationTiming}</p></details>)}</div>}<a className="detail-link" href="#conditions">支援額を総額に反映する ↑</a></article>
+      <article className="detail-card"><h3>入試</h3><dl className="detail-list"><div><dt>検定料</dt><dd>{school.entranceExamFeeLabel}</dd></div><div><dt>最新の入試結果</dt><dd>{school.admissionResultSummary}</dd></div><div><dt>募集枠</dt><dd>{school.admissionSummary}</dd></div></dl></article>
+      <details className="detail-card source-card"><summary>出典と未収録項目 <span>最終確認 {school.lastChecked.replaceAll('-', '.')}</span></summary><ul>{school.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title} ↗</a></li>)}</ul>{school.missingFieldLabels.length > 0 && <p>未収録：{school.missingFieldLabels.join('・')}</p>}</details>
+    </div>
+  </section>
+);
+
+const ComparisonTable = ({ schools, costs, commuteLabels }: { schools: School[]; costs: Map<string, FourYearCost>; commuteLabels: Map<string, string> }) => (
+  <section id="compare" className="comparison-section">
+    <div className="section-heading"><div><div className="eyebrow">任意の比較</div><h2>選んだ学校の違い</h2></div><p>比較したい学校だけを並べています。学校を外すとここも閉じます。</p></div>
+    <div className="table-scroll"><table><thead><tr><th>比較項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody>
+      <tr><th>4年間実負担</th>{schools.map((school) => <td className="table-total" key={school.id}>{formatYen((costs.get(school.id)?.totalCostYen ?? 0) / 10000)}</td>)}</tr>
+      <tr><th>通学時間</th>{schools.map((school) => <td key={school.id}>{commuteLabels.get(school.id)}</td>)}</tr>
+      <tr><th>国家試験 3年平均</th>{schools.map((school) => <td key={school.id}>{school.passRate}%</td>)}</tr>
+      <tr><th>資格</th>{schools.map((school) => <td key={school.id}>{school.certificates}</td>)}</tr>
+      <tr><th>卒業後の進路</th>{schools.map((school) => <td key={school.id}>{school.careerSummary}</td>)}</tr>
+      <tr><th>支援制度</th>{schools.map((school) => <td key={school.id}>{school.scholarshipSummary}</td>)}</tr>
+    </tbody></table></div>
+  </section>
 );
 
 export default function Home() {
   const [area, setArea] = useState('関東全域');
   const [tuitionLimit, setTuitionLimit] = useState('650万円以内');
   const [commuteLimit, setCommuteLimit] = useState('60分以内');
-  const [commuteTimes, setCommuteTimes] = useState<Record<string, string>>({});
-  const [homeStationId, setHomeStationId] = useState('');
-  const [commutePassCosts, setCommutePassCosts] = useState<Record<string, string>>({});
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [quizOpen, setQuizOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [priorityPreference, setPriorityPreference] = useState<PriorityPreference>('cost');
-  const [careerPreference, setCareerPreference] = useState<CareerPreference>('undecided');
   const [livingMode, setLivingMode] = useState<LivingMode>('home');
-  const [selectedCostSchoolId, setSelectedCostSchoolId] = useState(sourceSchools[0]?.id ?? '');
+  const [monthlyLivingCostMan, setMonthlyLivingCostMan] = useState(8);
   const [annualExtra, setAnnualExtra] = useState(5);
   const [annualScholarshipSupportMan, setAnnualScholarshipSupportMan] = useState(0);
-  const [monthlyLivingCostMan, setMonthlyLivingCostMan] = useState(8);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [detailSchoolId, setDetailSchoolId] = useState('');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const schools = useMemo(() => sourceSchools.map((school) => {
-    const entered = commuteTimes[school.id]?.trim();
-    const minutes = entered ? Number(entered) : NaN;
-    return {
-      ...school,
-      commute: Number.isFinite(minutes) && minutes > 0
-        ? minutes
-        : school.commuteEstimate?.averageMinutes ?? school.commute,
-    };
-  }), [commuteTimes]);
+  const commuteTimes: Record<string, string> = {};
+  const schools = useMemo(() => sourceSchools.map((school) => ({
+    ...school,
+    commute: school.commuteEstimate?.averageMinutes ?? school.commute,
+  })), []);
 
   const filteredSchools = useMemo(() => schools.filter((school) => {
-    const inArea = area === '関東全域' || school.prefecture === area;
     const maxTuition = Number(tuitionLimit.replace(/[^0-9]/g, ''));
     const maxCommute = Number(commuteLimit.replace(/[^0-9]/g, ''));
-    const inBudget = school.tuition <= maxTuition;
-    const inCommute = school.commute === null || school.commute <= maxCommute;
-    return inArea && inBudget && inCommute;
-  }), [area, commuteLimit, tuitionLimit, schools]);
+    return (area === '関東全域' || school.prefecture === area) && school.tuition <= maxTuition && (school.commute === null || school.commute <= maxCommute);
+  }), [area, commuteLimit, schools, tuitionLimit]);
 
-  const selectedSchools = selectedIds.map((id) => schools.find((school) => school.id === id)).filter((school): school is School => Boolean(school));
-  const selectedCostSchool = sourceSchools.find((school) => school.id === selectedCostSchoolId) ?? sourceSchools[0];
-  const selectedCommuteKey = homeStationId && selectedCostSchool
-    ? commuteFareKey(homeStationId, selectedCostSchool.id)
-    : '';
-  const selectedCommuteFare = homeStationId && selectedCostSchool
-    ? getCommuteFare(homeStationId, selectedCostSchool.id)
-    : null;
-  const enteredCommutePass = selectedCommuteKey ? parseFareYen(commutePassCosts[selectedCommuteKey] ?? '') : null;
-  const selectedCommutePass = enteredCommutePass ?? selectedCommuteFare?.studentSixMonthYen ?? 0;
-  const selectedAnnualExtraEstimateMan = (selectedCostSchool?.annualExtraEstimateYen ?? 50000) / 10000;
-  const fourYearCost = calculateFourYearCost({
-    schoolCostYen: Math.round((selectedCostSchool?.tuition ?? 0) * 10000),
-    entranceExamFeeYen: selectedCostSchool?.entranceExamFeeYen ?? 0,
-    annualExtraYen: annualExtra * 10000,
-    livingMode,
-    housing: selectedCostSchool?.housing,
-    managementFeeMonthlyYen: housingAssumptions.managementFeeMonthlyYen,
-    initialCostMonths: housingAssumptions.initialCostMonths,
-    monthlyLivingCostYen: livingMode === 'away' ? monthlyLivingCostMan * 10000 : 20000,
-    commutePassSixMonthYen: livingMode === 'home' && Number.isFinite(selectedCommutePass) && selectedCommutePass > 0 ? selectedCommutePass : 0,
-    annualScholarshipSupportYen: annualScholarshipSupportMan * 10000,
-  });
-  const rankingCommutePassCosts = useMemo(() => Object.fromEntries(
-    schools.map((school) => {
-      const key = homeStationId ? commuteFareKey(homeStationId, school.id) : '';
-      const parsed = key ? parseFareYen(commutePassCosts[key] ?? '') : null;
-      return [school.id, parsed ?? 0];
-    }),
-  ), [commutePassCosts, homeStationId, schools]);
-  const costRankings = useMemo(() => rankSchoolsByFourYearCost(schools, {
+  const rankingCommutePassCosts = useMemo(() => Object.fromEntries(schools.map((school) => [school.id, 0])), [schools]);
+  const costOptions = useMemo(() => ({
     livingMode,
     monthlyLivingCostYen: livingMode === 'away' ? monthlyLivingCostMan * 10000 : 20000,
     managementFeeMonthlyYen: housingAssumptions.managementFeeMonthlyYen,
     initialCostMonths: housingAssumptions.initialCostMonths,
     annualScholarshipSupportYen: annualScholarshipSupportMan * 10000,
     commutePassSixMonthYenBySchoolId: rankingCommutePassCosts,
-  }), [annualScholarshipSupportMan, livingMode, monthlyLivingCostMan, rankingCommutePassCosts, schools]);
-  const costBar = Math.min(100, Math.max(18, Math.round(fourYearCost.totalCostYen / 100000)));
-  const commuteDisplay = (school: School) => {
-    const entered = commuteTimes[school.id]?.trim();
-    const minutes = entered ? Number(entered) : NaN;
-    return Number.isFinite(minutes) && minutes > 0
-      ? formatOptional(school.commute, '分')
-      : formatCommuteTimeEstimate(school.commuteEstimate);
-  };
-
-  const toggleSchool = (id: string) => {
-    setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : current.length >= 3 ? current : [...current, id]);
-  };
-
-  const handleQuizSubmit = () => {
-    const filters = preferenceToFilters({ priority: priorityPreference, career: careerPreference });
-    setTuitionLimit(filters.tuitionLimit);
-    setCommuteLimit(filters.commuteLimit);
-    setQuizOpen(false);
-    document.querySelector('#search')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const resetFilters = () => {
-    setArea('関東全域');
-    setTuitionLimit('650万円以内');
-    setCommuteLimit('60分以内');
-    setPriorityPreference('cost');
-    setCareerPreference('undecided');
-  };
+  }), [annualScholarshipSupportMan, livingMode, monthlyLivingCostMan, rankingCommutePassCosts]);
+  const costRankings = useMemo(() => rankSchoolsByFourYearCost(
+    filteredSchools.map((school) => ({ ...school, annualExtraEstimateYen: annualExtra * 10000 })),
+    costOptions,
+  ), [annualExtra, costOptions, filteredSchools]);
+  const costsBySchoolId = useMemo(() => new Map(schools.map((school) => [school.id, calculateFourYearCost({
+    schoolCostYen: Math.round(school.tuition * 10000),
+    entranceExamFeeYen: school.entranceExamFeeYen,
+    annualExtraYen: annualExtra * 10000,
+    livingMode,
+    housing: school.housing,
+    managementFeeMonthlyYen: housingAssumptions.managementFeeMonthlyYen,
+    initialCostMonths: housingAssumptions.initialCostMonths,
+    monthlyLivingCostYen: livingMode === 'away' ? monthlyLivingCostMan * 10000 : 20000,
+    annualScholarshipSupportYen: annualScholarshipSupportMan * 10000,
+  })])), [annualExtra, annualScholarshipSupportMan, livingMode, monthlyLivingCostMan, schools]);
+  const selectedSchools = selectedIds.map((id) => schools.find((school) => school.id === id)).filter((school): school is School => Boolean(school));
+  const detailSchool = schools.find((school) => school.id === detailSchoolId) ?? null;
+  const detailCost = detailSchool ? costsBySchoolId.get(detailSchool.id) ?? null : null;
+  const detailRanking = detailSchool ? costRankings.find((school) => school.id === detailSchool.id) : undefined;
+  const commuteLabels = new Map(schools.map((school) => [school.id, getCommuteLabel(school, commuteTimes)]));
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
     document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const showCostForSchool = (schoolId: string) => {
-    setSelectedCostSchoolId(schoolId);
-    scrollTo('#cost');
-  };
+  const toggleSchool = (id: string) => setSelectedIds((current) => current.includes(id) ? current.filter((item) => item !== id) : current.length < 3 ? [...current, id] : current);
+  const openDetails = (id: string) => { setDetailSchoolId(id); window.setTimeout(() => scrollTo('#school-details'), 0); };
+  const resetConditions = () => { setArea('関東全域'); setTuitionLimit('650万円以内'); setCommuteLimit('60分以内'); setLivingMode('home'); setMonthlyLivingCostMan(8); setAnnualExtra(5); setAnnualScholarshipSupportMan(0); };
 
   return (
     <div className="site-shell">
-      <header>
-        <div className="wrap nav">
-          <a className="brand" href="#top"><span className="logo">看</span>看護進学ナビ <span className="brand-sub">進学情報</span></a>
-          <nav className="navlinks" aria-label="メインナビゲーション">
-            <a href="#ranking" onClick={() => setMobileMenuOpen(false)}>総費用ランキング</a><a href="#search" onClick={() => setMobileMenuOpen(false)}>学校を探す</a><a href="#compare" onClick={() => setMobileMenuOpen(false)}>比較する</a><a href="#cost" onClick={() => setMobileMenuOpen(false)}>費用を計算</a><a href="#scholarships" onClick={() => setMobileMenuOpen(false)}>支援制度</a>
-            <button className="outline" onClick={() => { setQuizOpen(true); setMobileMenuOpen(false); }}>希望条件を整理</button>
-          </nav>
-          <button className="mobile-menu-button" aria-label={mobileMenuOpen ? 'メニューを閉じる' : 'メニューを開く'} aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen((current) => !current)}>{mobileMenuOpen ? '×' : '☰'}</button>
-          {mobileMenuOpen && <div className="mobile-menu"><a href="#ranking" onClick={() => setMobileMenuOpen(false)}>総費用ランキング</a><a href="#search" onClick={() => setMobileMenuOpen(false)}>学校を探す</a><a href="#compare" onClick={() => setMobileMenuOpen(false)}>比較する</a><a href="#cost" onClick={() => setMobileMenuOpen(false)}>費用を計算</a><a href="#scholarships" onClick={() => setMobileMenuOpen(false)}>支援制度</a><button className="primary" onClick={() => { setQuizOpen(true); setMobileMenuOpen(false); }}>希望条件を整理</button></div>}
-        </div>
-      </header>
+      <header><div className="wrap nav"><a className="brand" href="#top"><span className="logo">看</span>看護進学ナビ <span className="brand-sub">実負担で学校を選ぶ</span></a><nav className="navlinks"><a href="#conditions">条件を決める</a><a href="#results">結果を見る</a>{selectedIds.length > 0 && <a href="#compare">比較を見る</a>}</nav><button className="mobile-menu-button" aria-label="メニュー" onClick={() => setMobileMenuOpen((current) => !current)}>{mobileMenuOpen ? '×' : '☰'}</button>{mobileMenuOpen && <div className="mobile-menu"><a href="#conditions" onClick={() => setMobileMenuOpen(false)}>条件を決める</a><a href="#results" onClick={() => setMobileMenuOpen(false)}>結果を見る</a>{selectedIds.length > 0 && <a href="#compare" onClick={() => setMobileMenuOpen(false)}>比較を見る</a>}</div>}</div></header>
 
       <main id="top">
-        <section className="hero"><div className="wrap hero-grid"><div>
-          <div className="eyebrow">公式情報をもとにした看護学校比較</div>
-          <h1>納得できる進路を、<br /><span>比較できる情報</span>から。</h1>
-          <p>学費、通学条件、取得できる資格、国家試験、卒業後の進路。学校ごとに分かれている情報を整理し、同じ画面で比較できます。</p>
-          <div className="hero-actions"><button className="primary" onClick={() => document.querySelector('#search')?.scrollIntoView({ behavior: 'smooth' })}>条件から学校を探す</button><button className="outline" onClick={() => setQuizOpen(true)}>希望条件を整理する</button></div>
-          <div className="checks"><span className="check">登録せずに利用可能</span><span className="check">数値の出典を表示</span><span className="check">スマートフォン対応</span></div>
-        </div><div className="visual"><div className="visual-top"><div className="visual-title">条件に近い学校</div><span className="pill">指定条件 {filteredSchools.length}件</span></div>{schools.slice(0, 2).map((school) => <div className="school-card" key={school.id}><div className="school-head"><div><div className="school-name">{school.name}</div><small className="major">{school.faculty}</small></div><span className="match">{school.category}</span></div><div className="metrics"><div className="metric"><small>4年間学費</small><b>{formatSchoolCost(school)}</b></div><div className="metric"><small>通学時間</small><b>{commuteDisplay(school)}</b></div><div className="metric"><small>国試・3年平均</small><b>{school.passRate}%</b></div></div><div className="source">{school.confidence}　{school.sourceCount}出典　最終確認 {school.lastChecked.replaceAll('-', '.').slice(0, 7)}</div></div>)}</div></div></section>
+        <section className="app-intro"><div className="wrap"><div className="intro-copy"><div className="eyebrow">関東・看護大学</div><h1>卒業までにかかるお金で、<br /><span>進学先を考える。</span></h1><p>学費だけでなく、住まい・生活費・通学費まで含めた「実際に必要な金額」の目安を出します。</p></div>
+          <div id="conditions" className="condition-card"><div className="condition-card-heading"><div><span>STEP 1</span><h2>あなたの条件を入れる</h2></div><button className="reset-link" onClick={resetConditions}>リセット</button></div><div className="condition-grid">
+            <fieldset><legend>住まい</legend><div className="choice-row"><button className={livingMode === 'home' ? 'active' : ''} onClick={() => setLivingMode('home')}>自宅から通う</button><button className={livingMode === 'away' ? 'active' : ''} onClick={() => setLivingMode('away')}>一人暮らし</button></div>{livingMode === 'away' && <label className="inline-input">生活費（月）<input type="number" min="3" max="20" value={monthlyLivingCostMan} onChange={(event) => setMonthlyLivingCostMan(Number(event.target.value))} />万円</label>}</fieldset>
+            <label>エリア<select value={area} onChange={(event) => setArea(event.target.value)}><option>関東全域</option><option>東京都</option><option>神奈川県</option><option>埼玉県</option><option>千葉県</option><option>茨城県</option><option>栃木県</option><option>群馬県</option></select></label>
+            <label>学費の上限<select value={tuitionLimit} onChange={(event) => setTuitionLimit(event.target.value)}><option>550万円以内</option><option>650万円以内</option><option>700万円以内</option></select></label>
+            <label>通学時間の上限<select value={commuteLimit} onChange={(event) => setCommuteLimit(event.target.value)}><option>45分以内</option><option>60分以内</option><option>90分以内</option></select></label>
+            <label>教材・実習費（年）<input type="number" min="0" max="60" value={annualExtra} onChange={(event) => setAnnualExtra(Number(event.target.value))} /><small>万円</small></label>
+            <label>返済不要の支援（年）<input type="number" min="0" max="200" step="0.1" value={annualScholarshipSupportMan} onChange={(event) => setAnnualScholarshipSupportMan(Number(event.target.value))} /><small>万円</small></label>
+          </div><button className="primary condition-submit" onClick={() => scrollTo('#results')}>この条件で総額を見る ↓</button><p className="condition-note">未入力の項目は、現在収録している公開情報または地域相場の目安で計算します。</p></div>
+        </div></section>
 
-        <ComparisonWorkspace
-          rankings={costRankings}
-          selectedSchools={selectedSchools}
-          selectedIds={selectedIds}
-          livingMode={livingMode}
-          monthlyLivingCostMan={monthlyLivingCostMan}
-          annualScholarshipSupportMan={annualScholarshipSupportMan}
-          collectedAt={datasetMeta.collectedAt}
-          commuteDisplay={commuteDisplay}
-          formatYen={formatYen}
-          onToggleSchool={toggleSchool}
-          onChangeLivingMode={setLivingMode}
-          onShowCost={showCostForSchool}
-          onShowComparison={() => scrollTo('#compare')}
-        />
-        <div className="wrap trust"><div className="trust-heading"><b>ランキングの総額に含まれるもの</b><span>学校ごとの差が出る費用を、同じ条件でまとめて比較しています。</span></div><div className="trust-line"><div className="trust-item"><b>学校納付金</b><span>入学金・授業料・施設費など</span></div><div className="trust-item"><b>住居・生活費</b><span>自宅通学／一人暮らしを切り替え</span></div><div className="trust-item"><b>受験料・教材・通学費</b><span>公開値または目安を含む概算</span></div></div></div>
+        <section id="results" className="results-section"><div className="wrap"><div className="results-heading"><div><div className="eyebrow">STEP 2</div><h2>4年間の総費用ランキング</h2><p>{area}・{livingMode === 'home' ? '自宅通学' : '一人暮らし'}・学費 {tuitionLimit}・通学 {commuteLimit}</p></div><span className="result-count">{costRankings.length}校</span></div>{costRankings.length === 0 ? <p className="empty-message">条件に合う学校がありません。条件を広げてみてください。</p> : <div className="result-list">{costRankings.map((ranked) => <article className="result-card" key={ranked.id}><div className="result-rank"><b>{ranked.rank}</b><span>位</span></div><div className="result-content"><div className="result-name"><div><h3>{ranked.name}</h3><p>{ranked.faculty}・{ranked.prefecture}{ranked.city}</p></div><span>{ranked.confidence}</span></div><div className="result-total"><span>4年間実負担目安</span><b>{formatYen(ranked.cost.totalCostYen / 10000)}</b></div><CostBreakdown cost={ranked.cost} /><div className="result-meta"><span>通学 {getCommuteLabel(ranked, commuteTimes)}</span><span>国試 {ranked.passRate}%</span><span>{ranked.missingFieldLabels.length ? `未収録 ${ranked.missingFieldLabels.length}項目` : '主要情報あり'}</span></div><div className="result-actions"><button className="detail-button" onClick={() => openDetails(ranked.id)}>学校の情報を見る →</button><button className={`select-button ${selectedIds.includes(ranked.id) ? 'selected' : ''}`} onClick={() => toggleSchool(ranked.id)}>{selectedIds.includes(ranked.id) ? '✓ 比較中' : '＋ 比較に追加'}</button></div></div></article>)}</div>}<p className="result-note">表示は大学の優劣ではなく、入力条件での費用目安です。総額には推定値・未収録項目が含まれます。調査日：{datasetMeta.collectedAt.replaceAll('-', '.')}</p></div></section>
 
-        <section id="search"><div className="wrap"><div className="section-head"><div className="eyebrow">学校検索</div><h2>希望条件に合う学校を探す</h2><p>地域、費用、通学時間などの条件を指定すると、候補がすぐに絞り込まれます。</p></div><div className="searchbox"><div className="filters"><div className="field"><label htmlFor="area">通学エリア</label><select id="area" value={area} onChange={(event) => setArea(event.target.value)}><option>関東全域</option><option>東京都</option><option>神奈川県</option><option>埼玉県</option><option>千葉県</option><option>茨城県</option><option>栃木県</option><option>群馬県</option></select></div><div className="field"><label htmlFor="tuition">4年間学費</label><select id="tuition" value={tuitionLimit} onChange={(event) => setTuitionLimit(event.target.value)}><option>650万円以内</option><option>550万円以内</option><option>700万円以内</option></select></div><div className="field"><label htmlFor="commute">通学時間</label><select id="commute" value={commuteLimit} onChange={(event) => setCommuteLimit(event.target.value)}><option>60分以内</option><option>45分以内</option><option>90分以内</option></select></div><button className="searchbtn" onClick={() => scrollTo('#cards')}>結果を見る（{filteredSchools.length}校）</button></div><div className="active-filter-row"><span><b>適用中：</b>{area}・学費 {tuitionLimit}・通学 {commuteLimit}・{priorityLabels[priorityPreference]}・卒業後 {careerLabels[careerPreference]}</span><button className="reset-button" onClick={resetFilters}>条件をリセット</button></div><div className="result-summary"><b>条件に合う学校 {filteredSchools.length}校</b><small>初回収集：公式情報＋通学時間の概算</small></div><div className="cards" id="cards">{filteredSchools.map((school) => { const selected = selectedIds.includes(school.id); return <article className={`result ${selected ? 'selected' : ''}`} key={school.id}><div className="tagrow"><span className="tag">{school.prefecture}</span>{school.tags.map((tag) => <span className="tag" key={tag}>{tag}</span>)}</div><h3>{school.name}</h3><div className="major">{school.faculty}</div><div className="cost">{formatSchoolCost(school)} <small>4年間既知費用</small></div><div className="row"><span>看護師国試 3年平均</span><b>{school.passRate}%</b></div><div className="row"><span>卒業後の進路</span><b>{school.careerSummary}</b></div><div className="row"><span>奨学金・支援</span><b>{school.scholarshipSummary === '未収録' ? school.scholarshipSummary : '制度情報あり'}</b></div><div className="row"><span>自宅からの通学</span><b>{commuteDisplay(school)}</b></div><div className="row"><span>未収録項目</span><b>{school.missingFieldLabels.length ? `${school.missingFieldLabels.length}項目` : 'なし'}<br /><small className="info">{school.missingFieldLabels.join('・')}</small></b></div><div className="source">{school.sourceCount}出典・{school.lastChecked.replaceAll('-', '.')}</div><div className="result-actions"><button className="selectbtn" onClick={() => toggleSchool(school.id)}>{selected ? '✓ 比較に追加済み' : '＋ 比較に追加'}</button><button className="secondarybtn" onClick={() => showCostForSchool(school.id)}>この学校の費用を見る</button></div></article>; })}</div>{filteredSchools.length === 0 && <p className="no-results">条件に合う学校がありません。検索条件を広げてみてください。</p>}</div></div></section>
+        {detailSchool && detailCost && <SchoolDetails school={detailSchool} cost={detailCost} ranked={detailRanking} commuteLabel={getCommuteLabel(detailSchool, commuteTimes)} selected={selectedIds.includes(detailSchool.id)} onToggle={() => toggleSchool(detailSchool.id)} />}
+        {selectedIds.length > 0 && <ComparisonTable schools={selectedSchools} costs={costsBySchoolId} commuteLabels={commuteLabels} />}
 
-        <section className="dark" id="compare"><div className="wrap"><div className="section-head"><div className="eyebrow">学校比較</div><h2>学校ごとの違いを、同じ基準で比較</h2><p>比較に追加した学校だけを、対象年度や集計条件とあわせて確認できます。</p></div>{selectedSchools.length === 0 ? <p className="no-results">比較する学校がありません。学校検索から候補を追加してください。</p> : <div className="compare-wrap"><table className="compare-table"><thead><tr><th>比較項目</th>{selectedSchools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>4年間の既知費用<br /><span className="info">居住地で変動する場合あり</span></td>{selectedSchools.map((school) => <td className="good" key={school.id}>{formatSchoolCost(school)}</td>)}</tr><tr><td>生活費込み総額</td>{selectedSchools.map((school) => <td key={school.id}>{formatOptional(school.livingTotal, '万円')}</td>)}</tr><tr><td>看護師国試 3年平均<br /><span className="info">大学公表値・対象区分は学校ごとに確認</span></td>{selectedSchools.map((school) => <td className="good" key={school.id}>{school.passRate}%<br /><span className="info">最新 {school.latestPassRate}%・合格者 {school.latestPassCount}/{school.latestExamineeCount}人（{school.examBasis}）</span></td>)}</tr><tr><td>最新の入試結果<br /><span className="info">結果を公表している年度</span></td>{selectedSchools.map((school) => <td key={school.id}>{school.admissionResultSummary}</td>)}</tr><tr><td>大学へのアクセス</td>{selectedSchools.map((school) => <td key={school.id}>{school.accessSummary}</td>)}</tr><tr><td>通学時間</td>{selectedSchools.map((school) => <td key={school.id}>{commuteDisplay(school)}</td>)}</tr><tr><td>取得可能資格</td>{selectedSchools.map((school) => <td key={school.id}>{school.certificates}</td>)}</tr><tr><td>卒業後の進路</td>{selectedSchools.map((school) => <td key={school.id}>{school.careerSummary}</td>)}</tr><tr><td>奨学金・支援</td>{selectedSchools.map((school) => <td key={school.id}>{school.scholarshipSummary}</td>)}</tr><tr><td>主な実習先・実習メモ</td>{selectedSchools.map((school) => <td key={school.id}>{school.practiceSummary}</td>)}</tr><tr><td>情報の信頼度</td>{selectedSchools.map((school) => <td className={school.confidence.startsWith('A') ? 'good' : ''} key={school.id}>{school.confidence}<br /><span className="info">未収録 {school.missingFields.length}項目・出典{school.sourceCount}件</span></td>)}</tr></tbody></table></div>}</div></section>
-
-        <section id="cost"><div className="wrap"><div className="section-head"><div className="eyebrow">費用シミュレーション</div><h2>卒業までに必要な実負担を試算</h2><p>学校納付金だけでなく、受験料・教材・住居・生活・通学まで含めて4年間の総額を試算します。</p></div><div className="sim-grid"><div className="panel"><h3>条件を調整</h3><div className="field"><label htmlFor="cost-school">学校</label><select id="cost-school" value={selectedCostSchoolId} onChange={(event) => setSelectedCostSchoolId(event.target.value)}>{sourceSchools.map((school) => <option value={school.id} key={school.id}>{school.name}</option>)}</select></div><div className="range-line"><label htmlFor="annual-extra"><span>年間の教材・実習費</span><b>{annualExtra}万円</b></label><input id="annual-extra" type="range" min="0" max="60" value={annualExtra} onChange={(event) => setAnnualExtra(Number(event.target.value))} /></div><p className="info simulator-note">選択校の公開情報・公開校の金額をもとにした初期目安は年{selectedAnnualExtraEstimateMan}万円。未収録分を含む概算なので、必要に応じて調整してください。</p><label className="living-label">生活スタイル</label><div className="toggle"><button className={livingMode === 'home' ? 'active' : ''} onClick={() => setLivingMode('home')}>自宅から通う</button><button className={livingMode === 'away' ? 'active' : ''} onClick={() => setLivingMode('away')}>一人暮らし</button></div>{livingMode === 'away' && <div className="range-line"><label htmlFor="monthly-living"><span>月の生活費（食費・光熱費等）</span><b>{monthlyLivingCostMan}万円</b></label><input id="monthly-living" type="range" min="5" max="15" value={monthlyLivingCostMan} onChange={(event) => setMonthlyLivingCostMan(Number(event.target.value))} /></div>}<p className="info simulator-note">学校費用は表示中の「4年間既知費用」の上限側を使用。定期代を入力すると6か月分×8回を加算します。</p><a className="support-jump" href="#scholarships">返済不要の支援を入力・確認する →</a></div><div className="panel"><small className="muted-label">{selectedCostSchool?.name}・4年間の実負担目安</small><div className="big-number">{formatYen(fourYearCost.totalCostYen / 10000)}</div><div className="cost-status">支援反映後の目安</div><div className="bar"><span style={{ width: `${costBar}%` }} /></div><div className="breakdown"><div><small>学校納付金（既知）</small><b>{formatYen(fourYearCost.schoolCostYen / 10000)}</b></div><div><small>受験料（1校分）</small><b>{formatYen(fourYearCost.entranceExamFeeYen / 10000)}</b></div><div><small>教材・実習等</small><b>{formatYen(fourYearCost.annualExtraCostYen / 10000)}</b></div><div><small>住居費</small><b>{formatYen(fourYearCost.housingCostYen / 10000)}</b></div><div><small>生活費</small><b>{formatYen(fourYearCost.livingCostYen / 10000)}</b></div><div><small>通学定期</small><b>{formatYen(fourYearCost.commutePassCostYen / 10000)}</b></div><div className="breakdown-support"><small>給付・減免</small><b>−{formatYen(fourYearCost.scholarshipSupportYen / 10000)}</b></div></div>{livingMode === 'away' && selectedCostSchool?.housing && <p className="info simulator-note">家賃目安：月{formatYen(selectedCostSchool.housing.rentMonthlyYen / 10000)}（{selectedCostSchool.housing.estimateLabel}）。管理費月0.5万円、契約初期費用は家賃5か月分で仮置きしています。<br /><a href={selectedCostSchool.housing.sourceUrl} target="_blank" rel="noreferrer">相場の出典：{selectedCostSchool.housing.sourceTitle} ↗</a></p>}{livingMode === 'home' && <p className="info simulator-note">自宅通学は生活費を月2万円で仮置き。住居費は0円、定期代は入力した学生6か月定期×8回で計算しています。</p>}<p className="info simulator-note">「既知」以外は概算または入力値です。住居費は公式な学校情報ではなく、周辺の相場・掲載例による推定です。調査日：2026.08.27</p></div></div></div></section>
-
-        <section id="data-details"><div className="wrap"><div className="section-head"><div className="eyebrow">費用の内訳</div><h2>初期費用と教材・実習費も確認</h2><p>4年間の既知費用とは別に、出願時の検定料、教材・実習関連費、その他の初年度費用を表示しています。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>費用項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>入試検定料</td>{schools.map((school) => <td key={school.id}>{school.entranceExamFeeLabel}</td>)}</tr><tr><td>教材・実習費</td>{schools.map((school) => <td key={school.id}>{school.materialsCostLabel}</td>)}</tr><tr><td>その他の初年度費用</td>{schools.map((school) => <td key={school.id}>{school.otherInitialCostLabel}</td>)}</tr><tr><td>金額未収録の追加費用メモ</td>{schools.map((school) => <td key={school.id}>{school.additionalCostNote}</td>)}</tr></tbody></table></div></div></section>
-        <section id="scholarships"><div className="wrap"><div className="section-head"><div className="eyebrow">奨学金・授業料支援</div><h2>支援を得た場合の実負担も試算</h2><p>返済不要の給付や授業料減免を入力すると、4年間の総額から差し引けます。貸与型は将来返すため、支援情報として表示しますが総額からは自動で引きません。</p></div><div className="support-panel"><div className="field"><label htmlFor="scholarship-support">返済不要の支援・授業料減免（年間）</label><input id="scholarship-support" type="number" min="0" max="200" step="0.1" inputMode="decimal" value={annualScholarshipSupportMan} onChange={(event) => setAnnualScholarshipSupportMan(Number(event.target.value))} /><small>採用された給付・減免の年間実額を入力。4年間分を総額から差し引きます。</small></div><div className="support-result"><span>現在の試算への反映額</span><b>−{formatYen(fourYearCost.scholarshipSupportYen / 10000)}</b><small>支援反映後：{formatYen(fourYearCost.totalCostYen / 10000)}</small></div></div><div className="aid-steps"><h3>奨学金・減免を得るまでの一般的な流れ</h3><ol><li>家計、学業成績、居住地、卒業後の勤務条件など対象要件を確認する。</li><li>入学前は高校・大学の予約採用や入試要項、入学後は大学の学生支援窓口で募集時期を確認する。</li><li>申請書、家計資料、在学・進学に関する書類を学内締切までに提出する。</li><li>採用後は在籍・成績などの継続要件と、貸与型の返還・勤務条件を確認する。</li></ol><p className="info">制度・年度・世帯状況で条件が変わるため、最終的な採否や金額は各制度の募集要項で確認してください。</p></div><div className="aid-grid">{schools.map((school) => <article className="aid-card" key={school.id}><h3>{school.name}</h3><p>{school.scholarshipSummary}</p>{school.scholarshipPrograms.length > 0 && <div className="aid-programs">{school.scholarshipPrograms.map((program) => <ScholarshipProgramCard key={program.name} program={program} />)}</div>}<small className="info">申請先の目安：大学の学生支援窓口・各制度の募集要項</small></article>)}</div></div></section>
-
-        <section id="admissions-details"><div className="wrap"><div className="section-head"><div className="eyebrow">入試情報</div><h2>募集枠の違いも確認</h2><p>2027年度の公式募集人員を、学校ごとの選抜区分で整理しています。若干名は公式表記のままです。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>2027年度募集枠</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>選抜区分別</td>{schools.map((school) => <td key={school.id}>{school.admissionSummary}</td>)}</tr></tbody></table></div></div></section>
-        <section id="sources"><div className="wrap"><div className="section-head"><div className="eyebrow">出典</div><h2>数字の根拠を確認する</h2><p>学校ごとに確認した公式ページ・公式PDFを一覧で確認できます。</p></div><div className="source-grid">{schools.map((school) => <details key={school.id}><summary>{school.name}（{school.sourceCount}件）</summary><ul>{school.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title} ↗</a></li>)}</ul></details>)}</div></div></section>
-        <CommutePassFinder
-          schools={sourceSchools}
-          homeStationId={homeStationId}
-          setHomeStationId={setHomeStationId}
-          commutePassCosts={commutePassCosts}
-          setCommutePassCosts={setCommutePassCosts}
-          commuteTimes={commuteTimes}
-          setCommuteTimes={setCommuteTimes}
-        />
+        <section className="next-step"><div className="wrap"><div><div className="eyebrow">まだ迷っているなら</div><h2>条件を変えて、もう一度見てみる</h2><p>自宅通学と一人暮らしを切り替えるだけでも、順位は大きく変わります。</p></div><button className="outline" onClick={() => scrollTo('#conditions')}>条件を調整する ↑</button></div></section>
       </main>
-
-      <footer><div className="wrap"><div className="footer-grid"><div><div className="brand footer-brand"><span className="logo">看</span>看護進学ナビ</div><p>数字と根拠から、納得できる進路選びを支える比較サービス。</p></div><div><b>このサイトについて</b><p>{datasetMeta.schoolCount}校の公式情報を初回接続しています。未収録項目は確定情報のように表示せず、順次追加します。</p></div></div><div className="disclaimer">© 2026 看護進学ナビ。初回データ最終確認：{datasetMeta.collectedAt.replaceAll('-', '.')}。</div></div></footer>
-
-      <div className={`comparebar ${selectedSchools.length === 0 ? 'hidden' : ''}`}><div><b>{selectedSchools.length}校を比較中</b> <small>{selectedSchools.map((school) => school.name).join('・')}</small></div><button onClick={() => document.querySelector('#compare')?.scrollIntoView({ behavior: 'smooth' })}>比較表を見る →</button></div>
-
-      {quizOpen && <div className="modal open" role="dialog" aria-modal="true" aria-labelledby="quiz-title" onClick={() => setQuizOpen(false)}><div className="modal-card" onClick={(event) => event.stopPropagation()}><button className="close" onClick={() => setQuizOpen(false)} aria-label="閉じる">×</button><div className="eyebrow">希望条件の整理</div><h2 id="quiz-title">進路選びで重視する条件</h2><p className="quiz-intro">選んだ内容を学校検索の条件に反映します。あとから検索画面で変更できます。</p><div className="q"><label>一番譲れないことは？</label><div className="choice"><button className={priorityPreference === 'cost' ? 'selected' : ''} aria-pressed={priorityPreference === 'cost'} onClick={() => setPriorityPreference('cost')}>学費を抑えたい</button><button className={priorityPreference === 'qualification' ? 'selected' : ''} aria-pressed={priorityPreference === 'qualification'} onClick={() => setPriorityPreference('qualification')}>資格実績を重視</button><button className={priorityPreference === 'commute' ? 'selected' : ''} aria-pressed={priorityPreference === 'commute'} onClick={() => setPriorityPreference('commute')}>通いやすさ</button><button className={priorityPreference === 'content' ? 'selected' : ''} aria-pressed={priorityPreference === 'content'} onClick={() => setPriorityPreference('content')}>学べる内容</button></div></div><div className="q"><label>卒業後のイメージは？</label><div className="choice"><button className={careerPreference === 'hospital' ? 'selected' : ''} aria-pressed={careerPreference === 'hospital'} onClick={() => setCareerPreference('hospital')}>大きな病院</button><button className={careerPreference === 'community' ? 'selected' : ''} aria-pressed={careerPreference === 'community'} onClick={() => setCareerPreference('community')}>地域医療</button><button className={careerPreference === 'undecided' ? 'selected' : ''} aria-pressed={careerPreference === 'undecided'} onClick={() => setCareerPreference('undecided')}>まだ決めていない</button></div></div><button className="modal-action" onClick={handleQuizSubmit}>この条件で学校を探す →</button></div></div>}
+      <footer><div className="wrap"><div className="footer-brand"><span className="logo">看</span>看護進学ナビ</div><p>公式情報と地域相場から、看護大学の実負担を目安として比較するサービスです。</p><small>初回データ最終確認：{datasetMeta.collectedAt.replaceAll('-', '.')}。掲載情報は必ず各学校の公式情報も確認してください。</small></div></footer>
     </div>
   );
 }
