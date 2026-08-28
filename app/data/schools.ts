@@ -66,7 +66,7 @@ type RawSchool = {
     destinationsWithPublishedCounts?: Array<{ destination: string; count: number }>;
     mainDestinations?: string[];
   };
-  financialAid?: { summary?: string };
+  financialAid?: { summary?: string; programs?: string[] };
   practice?: { sites?: string[]; notes?: string };
   dataQuality: {
     confidence: string;
@@ -117,6 +117,7 @@ export type School = {
   admissionResultSummary: string;
   careerSummary: string;
   scholarshipSummary: string;
+  scholarshipPrograms: string[];
   practiceSummary: string;
 };
 
@@ -357,6 +358,7 @@ const buildSchool = (raw: RawSchool): School => {
     admissionResultSummary: formatAdmissionResult(raw.admissions),
     careerSummary: formatCareerSummary(raw.career),
     scholarshipSummary: raw.financialAid?.summary ?? '未収録',
+    scholarshipPrograms: raw.financialAid?.programs ?? [],
     practiceSummary: raw.practice?.sites?.join('・') ?? raw.practice?.notes ?? '未収録',
   };
 };
