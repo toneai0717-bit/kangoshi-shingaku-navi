@@ -23,6 +23,14 @@ export type CommuteFareLookup = {
   sourceUrl: string | null;
 };
 
+export type CommuteTimeEstimate = {
+  schoolId: string;
+  minMinutes: number;
+  averageMinutes: number;
+  maxMinutes: number;
+  basis: string;
+};
+
 export const commuteStations: CommuteStation[] = [
   { id: 'omiya', name: '大宮駅', area: '埼玉県' },
   { id: 'urawa', name: '浦和駅', area: '埼玉県' },
@@ -35,6 +43,52 @@ export const commuteStations: CommuteStation[] = [
   { id: 'kawasaki', name: '川崎駅', area: '神奈川県' },
   { id: 'hachioji', name: '八王子駅', area: '東京都' },
 ];
+
+// 自宅駅が未入力のときに使う、関東圏の主要駅からのサイト内概算。
+// 個別の経路検索結果ではなく、検索条件と比較の初期値としてのみ利用する。
+export const commuteTimeEstimates: CommuteTimeEstimate[] = [
+  {
+    schoolId: 'tokyo-metropolitan-university-nursing',
+    minMinutes: 35,
+    averageMinutes: 45,
+    maxMinutes: 55,
+    basis: '関東主要駅からの概算。荒川キャンパス・南大沢キャンパスの移動を含め、時間帯や経路で変動。',
+  },
+  {
+    schoolId: 'saitama-prefectural-university-nursing',
+    minMinutes: 40,
+    averageMinutes: 55,
+    maxMinutes: 70,
+    basis: '関東主要駅からの概算。せんげん台駅からのバス・徒歩を含め、時間帯や経路で変動。',
+  },
+  {
+    schoolId: 'yokohama-city-university-nursing',
+    minMinutes: 35,
+    averageMinutes: 55,
+    maxMinutes: 75,
+    basis: '関東主要駅からの概算。市大医学部駅からの徒歩を含め、時間帯や経路で変動。',
+  },
+  {
+    schoolId: 'chiba-university-nursing',
+    minMinutes: 40,
+    averageMinutes: 55,
+    maxMinutes: 70,
+    basis: '関東主要駅からの概算。千葉駅からキャンパスまでの移動を含め、時間帯や経路で変動。',
+  },
+  {
+    schoolId: 'tokyo-junshin-university-nursing',
+    minMinutes: 45,
+    averageMinutes: 60,
+    maxMinutes: 75,
+    basis: '関東主要駅からの概算。八王子駅からのバス移動を含め、時間帯や経路で変動。',
+  },
+];
+
+export const getCommuteTimeEstimate = (schoolId: string) =>
+  commuteTimeEstimates.find((estimate) => estimate.schoolId === schoolId) ?? null;
+
+export const formatCommuteTimeEstimate = (estimate: CommuteTimeEstimate | null | undefined) =>
+  estimate ? `${estimate.minMinutes}〜${estimate.maxMinutes}分（平均${estimate.averageMinutes}分）` : '未収録';
 
 // 金額は公式資料で経路・学生区分・6か月期間を確認できたものだけを追加する。
 // 未登録区間を通常運賃や距離から補間してはいけない。

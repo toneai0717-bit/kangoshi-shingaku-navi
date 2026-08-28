@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import {
   commuteFareKey,
   commuteStations,
+  formatCommuteTimeEstimate,
   getCommuteFare,
   parseFareYen,
 } from '../data/commute';
@@ -111,6 +112,7 @@ export default function CommutePassFinder({
                   <small>入力値はこのブラウザ内だけで利用します。</small>
                   <label className="time-label" htmlFor={'commute-' + school.id}>
                     所要時間（検索条件用）
+                    <small className="info">未入力時の目安：{formatCommuteTimeEstimate(school.commuteEstimate)}</small>
                   </label>
                   <input
                     id={'commute-' + school.id}

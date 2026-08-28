@@ -1,4 +1,5 @@
 import researchData from '@/data/research/kanto-nursing-5-2026-08-26.json';
+import { getCommuteTimeEstimate, type CommuteTimeEstimate } from './commute';
 import { housingBySchoolId, type HousingEstimate } from './housing';
 
 type RawSchool = {
@@ -109,6 +110,7 @@ export type School = {
   annualExtraEstimateYen: number;
   commuteStation: string;
   commuteStationNote: string;
+  commuteEstimate: CommuteTimeEstimate | null;
   accessSummary: string;
   admissionSummary: string;
   admissionResultSummary: string;
@@ -341,6 +343,7 @@ const buildSchool = (raw: RawSchool): School => {
     annualExtraEstimateYen: estimateAnnualAdditionalCost(fee),
     commuteStation: raw.campusAccess?.stationForCommute ?? raw.campusAccess?.nearestStation ?? '未収録',
     commuteStationNote: raw.campusAccess?.stationAccessNote ?? '',
+    commuteEstimate: getCommuteTimeEstimate(raw.id),
     accessSummary: formatAccessSummary(raw.campusAccess),
     admissionSummary: formatAdmissionSummary(raw.admissions),
     admissionResultSummary: formatAdmissionResult(raw.admissions),
