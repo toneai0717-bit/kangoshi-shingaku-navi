@@ -159,6 +159,7 @@ export default function Home() {
       </header>
 
       <main id="top">
+        <section className="workflow-index" aria-label="看護大学選びの進め方"><div className="wrap"><div className="workflow-index-head"><div className="eyebrow">看護大学選びの順番</div><b>数字で絞って、根拠で決める</b></div><div className="workflow-steps"><a href="#ranking"><strong>01</strong><span>まず総額を見る</span><small>共通条件の費用目安を確認</small></a><a href="#search"><strong>02</strong><span>条件を変えて絞る</span><small>総額を見たあとに、条件を変えて候補を絞り込めます</small></a><a href="#compare"><strong>03</strong><span>候補を横並びで比べる</span><small>気になる学校を横並びで比較できます</small></a><a href="#cost"><strong>04</strong><span>内訳と支援を確認する</span><small>内訳を確認してから、支援制度を反映できます</small></a></div></div></section>
         <section className="hero"><div className="wrap hero-grid"><div>
           <div className="eyebrow">公式情報をもとにした看護学校比較</div>
           <h1>納得できる進路を、<br /><span>比較できる情報</span>から。</h1>
