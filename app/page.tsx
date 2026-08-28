@@ -2,8 +2,10 @@
 
 import { useMemo, useState } from 'react';
 import { calculateFourYearCost } from './data/costs';
+import { commuteFareKey, getCommuteFare, parseFareYen } from './data/commute';
 import { housingAssumptions } from './data/housing';
 import { datasetMeta, formatSchoolCost, schools as sourceSchools, type School } from './data/schools';
+import CommutePassFinder from './components/commute-pass-finder';
 
 type LivingMode = 'home' | 'away';
 
@@ -15,7 +17,7 @@ export default function Home() {
   const [tuitionLimit, setTuitionLimit] = useState('650万円以内');
   const [commuteLimit, setCommuteLimit] = useState('60分以内');
   const [commuteTimes, setCommuteTimes] = useState<Record<string, string>>({});
-  const [homeStation, setHomeStation] = useState('');
+  const [homeStationId, setHomeStationId] = useState('');
   const [commutePassCosts, setCommutePassCosts] = useState<Record<string, string>>({});
   const [selectedIds, setSelectedIds] = useState<string[]>(sourceSchools.slice(0, 2).map((school) => school.id));
   const [searching, setSearching] = useState(false);
@@ -43,7 +45,14 @@ export default function Home() {
 
   const selectedSchools = selectedIds.map((id) => schools.find((school) => school.id === id)).filter((school): school is School => Boolean(school));
   const selectedCostSchool = sourceSchools.find((school) => school.id === selectedCostSchoolId) ?? sourceSchools[0];
-  const selectedCommutePass = Number(commutePassCosts[selectedCostSchool?.id ?? ''] ?? 0);
+  const selectedCommuteKey = homeStationId && selectedCostSchool
+    ? commuteFareKey(homeStationId, selectedCostSchool.id)
+    : '';
+  const selectedCommuteFare = homeStationId && selectedCostSchool
+    ? getCommuteFare(homeStationId, selectedCostSchool.id)
+    : null;
+  const enteredCommutePass = selectedCommuteKey ? parseFareYen(commutePassCosts[selectedCommuteKey] ?? '') : null;
+  const selectedCommutePass = enteredCommutePass ?? selectedCommuteFare?.studentSixMonthYen ?? 0;
   const selectedAnnualExtraEstimateMan = (selectedCostSchool?.annualExtraEstimateYen ?? 50000) / 10000;
   const fourYearCost = calculateFourYearCost({
     schoolCostYen: Math.round((selectedCostSchool?.tuition ?? 0) * 10000),
@@ -108,7 +117,15 @@ export default function Home() {
         <section id="data-details"><div className="wrap"><div className="section-head"><div className="eyebrow">費用の内訳</div><h2>初期費用と教材・実習費も確認</h2><p>4年間の既知費用とは別に、出願時の検定料、教材・実習関連費、その他の初年度費用を表示しています。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>費用項目</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>入試検定料</td>{schools.map((school) => <td key={school.id}>{school.entranceExamFeeLabel}</td>)}</tr><tr><td>教材・実習費</td>{schools.map((school) => <td key={school.id}>{school.materialsCostLabel}</td>)}</tr><tr><td>その他の初年度費用</td>{schools.map((school) => <td key={school.id}>{school.otherInitialCostLabel}</td>)}</tr><tr><td>金額未収録の追加費用メモ</td>{schools.map((school) => <td key={school.id}>{school.additionalCostNote}</td>)}</tr></tbody></table></div></div></section>
         <section id="admissions-details"><div className="wrap"><div className="section-head"><div className="eyebrow">入試情報</div><h2>募集枠の違いも確認</h2><p>2027年度の公式募集人員を、学校ごとの選抜区分で整理しています。若干名は公式表記のままです。</p></div><div className="compare-wrap"><table className="compare-table"><thead><tr><th>2027年度募集枠</th>{schools.map((school) => <th key={school.id}>{school.name}</th>)}</tr></thead><tbody><tr><td>選抜区分別</td>{schools.map((school) => <td key={school.id}>{school.admissionSummary}</td>)}</tr></tbody></table></div></div></section>
         <section id="sources"><div className="wrap"><div className="section-head"><div className="eyebrow">出典</div><h2>数字の根拠を確認する</h2><p>学校ごとに確認した公式ページ・公式PDFを一覧で確認できます。</p></div><div className="source-grid">{schools.map((school) => <details key={school.id}><summary>{school.name}（{school.sourceCount}件）</summary><ul>{school.sources.map((source) => <li key={source.id}><a href={source.url} target="_blank" rel="noreferrer">{source.title} ↗</a></li>)}</ul></details>)}</div></div></section>
-        <section id="commute"><div className="wrap"><div className="section-head"><div className="eyebrow">通学費用</div><h2>駅から駅の定期代を入れて、総額を近づける</h2><p>自宅最寄り駅から学校の通学先駅まで、公共交通機関の最短ルートを確認し、学生6か月定期の金額を入力します。入力値はこのブラウザ内だけで利用します。</p></div><div className="searchbox"><div className="field station-field"><label htmlFor="home-station">自宅最寄り駅</label><input id="home-station" type="text" placeholder="例：大宮駅" value={homeStation} onChange={(event) => setHomeStation(event.target.value)} /><small>駅名を入力</small></div><div className="filters commute-inputs">{sourceSchools.map((school) => { const routeUrl = homeStation.trim() ? `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(homeStation.trim())}&destination=${encodeURIComponent(school.commuteStation)}&travelmode=transit` : undefined; return <div className="field commute-card" key={school.id}><label htmlFor={`commute-pass-${school.id}`}>{school.name}<small className="info">通学先駅：{school.commuteStation}</small>{school.commuteStationNote && <small className="info">{school.commuteStationNote}</small>}</label><a className={`route-link${routeUrl ? '' : ' disabled'}`} href={routeUrl} target="_blank" rel="noreferrer" aria-disabled={!routeUrl}>最短ルートを確認 ↗</a><input id={`commute-pass-${school.id}`} type="number" min="0" step="10" inputMode="numeric" placeholder="例：60,000" value={commutePassCosts[school.id] ?? ''} onChange={(event) => setCommutePassCosts((current) => ({ ...current, [school.id]: event.target.value }))} /><small>学生6か月定期・円</small><label className="time-label" htmlFor={`commute-${school.id}`}>所要時間（検索条件用）</label><input id={`commute-${school.id}`} type="number" min="1" max="300" inputMode="numeric" placeholder="例：45" value={commuteTimes[school.id] ?? ''} onChange={(event) => setCommuteTimes((current) => ({ ...current, [school.id]: event.target.value }))} /><small>分</small></div>; })}</div><p className="info simulator-note">定期代は「6か月分×8回＝4年間」で試算します。駅からキャンパスまでのバス・徒歩区間は駅間定期に含まれない場合があるため、各校のアクセス注記を確認してください。未入力の学校は通学費0円として扱い、費用の目安から除外しません。</p></div></div></section>
+        <CommutePassFinder
+          schools={sourceSchools}
+          homeStationId={homeStationId}
+          setHomeStationId={setHomeStationId}
+          commutePassCosts={commutePassCosts}
+          setCommutePassCosts={setCommutePassCosts}
+          commuteTimes={commuteTimes}
+          setCommuteTimes={setCommuteTimes}
+        />
       </main>
 
       <footer><div className="wrap"><div className="footer-grid"><div><div className="brand footer-brand"><span className="logo">看</span>看護進学ナビ</div><p>数字と根拠から、納得できる進路選びを支える比較サービス。</p></div><div><b>このサイトについて</b><p>{datasetMeta.schoolCount}校の公式情報を初回接続しています。未収録項目は確定情報のように表示せず、順次追加します。</p></div></div><div className="disclaimer">© 2026 看護進学ナビ。初回データ最終確認：{datasetMeta.collectedAt.replaceAll('-', '.')}。</div></div></footer>

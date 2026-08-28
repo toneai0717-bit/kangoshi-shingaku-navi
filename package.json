@@ -10,6 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "test:commute": "node --experimental-strip-types tests/commute.test.mjs",
     "test:costs": "node --experimental-strip-types tests/costs.test.mjs",
     "test:research": "node tests/research-data.test.mjs"
   },
