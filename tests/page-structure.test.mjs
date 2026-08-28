@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const page = readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+const workspace = readFileSync(new URL('../app/components/comparison-workspace.tsx', import.meta.url), 'utf8');
 const styles = readFileSync(new URL('../app/globals.css', import.meta.url), 'utf8');
 
-const rankingIndex = page.indexOf('id="ranking"');
+const rankingIndex = page.indexOf('<ComparisonWorkspace');
 const searchIndex = page.indexOf('id="search"');
 const compareIndex = page.indexOf('id="compare"');
 const costIndex = page.indexOf('id="cost"');
@@ -19,14 +20,14 @@ assert.ok(!page.includes('className="workflow-index"'), 'workflow explainer shou
 assert.ok(!page.includes('情報掲載方針'), 'editorial policy should stay out of the decision flow');
 assert.match(page, /useState<string\[\]>\(\[\]\)/, 'comparison should start with no selected schools');
 assert.match(page, /ComparisonWorkspace/, 'the ranking should be the comparison workspace entry point');
-assert.match(page, /選んだ学校の要点/, 'selected school information should be grouped in one place');
-assert.match(page, /ランキングの総額に含まれるもの/);
-assert.match(page, /学校納付金/);
-assert.match(page, /住居・生活費/);
-assert.match(page, /受験料・教材・通学費/);
+assert.match(workspace, /選んだ学校の要点/, 'selected school information should be grouped in one place');
+assert.match(workspace, /id="ranking"/);
+assert.match(workspace, /4年間の実負担目安/);
+assert.match(workspace, /学校ごとの情報を一つにまとめました/);
 assert.match(styles, /main\{display:flex;flex-direction:column/);
 assert.match(styles, /#cost\{order:6\}/);
 assert.match(styles, /#commute\{order:7\}/);
 assert.match(styles, /#data-details\{order:8\}/);
+assert.match(styles, /#compare:has\(\.no-results\)\{display:none\}/, 'empty comparison should stay out of the initial flow');
 
 console.log('page structure tests passed');
