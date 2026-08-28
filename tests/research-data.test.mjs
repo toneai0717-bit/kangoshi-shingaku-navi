@@ -20,6 +20,20 @@ assert.match(chiba.financialAid.summary, /5\.1万円/);
 assert.match(junshin.financialAid.summary, /5万円/);
 assert.ok(junshin.financialAid.programs.some((program) => program.includes('92万円')));
 
+const scholarshipPrograms = data.schools.flatMap((school) => school.financialAid?.programs ?? []);
+assert.equal(scholarshipPrograms.length, 16);
+for (const program of scholarshipPrograms) {
+  assert.equal(typeof program.name, 'string');
+  assert.ok(program.name.length > 0);
+  assert.ok(['給付', '授業料減免', '貸与'].includes(program.supportType));
+  assert.equal(typeof program.eligibility, 'string');
+  assert.equal(typeof program.amount, 'string');
+  assert.equal(typeof program.applicationTiming, 'string');
+  assert.equal(typeof program.repaymentCondition, 'string');
+  assert.ok(Array.isArray(program.sourceIds));
+  assert.ok(program.sourceIds.length > 0);
+}
+
 const chibaResult = chiba.admissions.find((admission) => admission.academicYear === 2026).result;
 assert.equal(chibaResult.generalFirstTerm.applicants, 167);
 assert.equal(chibaResult.generalFirstTerm.enrollees, 58);
