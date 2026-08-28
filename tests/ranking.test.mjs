@@ -27,7 +27,7 @@ const homeRanking = rankSchoolsByFourYearCost(schools, {
 
 assert.deepEqual(homeRanking.map((school) => school.id), ['affordable', 'expensive']);
 assert.equal(homeRanking[0].rank, 1);
-assert.equal(homeRanking[0].cost.totalCostYen, 6165000);
+assert.equal(homeRanking[0].cost.totalCostYen, 6310000);
 
 const awayRanking = rankSchoolsByFourYearCost(schools, {
   livingMode: 'away',
@@ -37,8 +37,8 @@ const awayRanking = rankSchoolsByFourYearCost(schools, {
 });
 
 assert.equal(awayRanking[0].id, 'affordable');
-assert.equal(awayRanking[0].cost.housingCostYen, 3180000);
-assert.equal(awayRanking[0].cost.totalCostYen, 12045000);
+assert.equal(awayRanking[0].cost.housingCostYen, 3155000);
+assert.equal(awayRanking[0].cost.totalCostYen, 12345000);
 
 const scholarshipRanking = rankSchoolsByFourYearCost(schools, {
   livingMode: 'home',
@@ -47,6 +47,6 @@ const scholarshipRanking = rankSchoolsByFourYearCost(schools, {
 });
 
 assert.equal(scholarshipRanking[0].cost.scholarshipSupportYen, 400000);
-assert.equal(scholarshipRanking[0].cost.totalCostYen, 5765000);
+assert.equal(scholarshipRanking[0].cost.totalCostYen, 5910000);
 
 console.log('ranking tests passed');

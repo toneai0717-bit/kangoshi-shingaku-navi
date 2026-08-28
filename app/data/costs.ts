@@ -1,4 +1,4 @@
-import type { HousingEstimate } from './housing';
+import type { HousingEstimate } from './housing.ts';
 
 export type LivingMode = 'home' | 'away';
 
